@@ -1,0 +1,9 @@
+#compiled resources#
+####################
+.pyc
+.dumps
+.egg-info
+.rdb
+
+
+
