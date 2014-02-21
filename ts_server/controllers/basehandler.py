@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:17:33
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-20 13:26:29
+# @Last Modified time: 2014-02-20 20:53:42
 
 from lib.redissession import Session
 from lib.authentication import *
@@ -45,11 +45,10 @@ class BaseHandler(tornado.web.RequestHandler):
 	def load_request(self):
 		try:
 			kw = json.loads(self.request.body)
-			# print "result "+kw
 			self.req,self.req_val = kw.popitem()
 		except ValueError:
 			self.write(self.json_packet(False, error="bad json request received %s"%self.request.body))
-		self.finish()
+			self.finish()
 
 	def json_packet(self, retval, error = None, return_code = None, packet = None):
 		kw = {'return':retval}

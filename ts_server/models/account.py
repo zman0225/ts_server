@@ -3,12 +3,13 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-20 12:15:34
+# @Last Modified time: 2014-02-20 15:59:44
 
-from ts_server.lib.authentication import constant_time_compare
-from ts_server.lib.utils import datetime_now
-from ts_server.utils.utils import *
+from lib.authentication import constant_time_compare
+from utils.utils import datetime_now
+from utils.utils import *
 from mongoengine import *
+import bcrypt
 
 workfactor = 12
 class Account(Document):
@@ -88,7 +89,7 @@ def validate_password(a, password):
 	else:
 		return False
 
-class AccountNotFound(NotFound): pass
+class AccountNotFound(Exception): pass
 class AccountExists(Exception): pass
 
 

@@ -3,7 +3,8 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:59:15
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-20 12:29:43
+# @Last Modified time: 2014-02-20 15:47:20
+from utils.utils import datetime_now
 
 from mongoengine import *
 
@@ -51,7 +52,7 @@ def NewRecipe(name, description='', category=category, instructions = [], servin
 		a.save()
 		return a
 
-class RecipeNotFound(NotFound): pass
+class RecipeNotFound(Exception): pass
 class RecipeExists(Exception): pass
 
 

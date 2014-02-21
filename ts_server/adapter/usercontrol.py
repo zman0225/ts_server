@@ -3,9 +3,9 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-20 12:20:41
+# @Last Modified time: 2014-02-20 20:52:45
 
-from ts_server.models.account import *
+from models.account import *
 
 import logging
 
@@ -14,6 +14,10 @@ def new_account(username,password,ip_addr):
 		account = register(username,password,ip_addr)
 		logging.debug("Account created [%s]"%account.username)
 		return account
-	except Exists:
+	except Exception as e:
 		logging.debug("Account already exists!")
 		return False
+
+def login(username,password):
+	return validate_login(username,password)
+

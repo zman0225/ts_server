@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-20 13:25:43
+# @Last Modified time: 2014-02-20 15:58:24
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -23,14 +23,14 @@ class UserHandler(BaseHandler):
 						'set_preferences':self.set_preferences,
 					}
 
-	@tornado.web.asynchronous
 	def post(self):
 		self.load_request()
 		if self.req is None:
 			return
 		try:
-			print "result ",self.req,self.req_val
+			print "result ",self.req_val, isinstance(self.req_val,dict)
 			self.cases[self.req](**self.req_val)
+			return
 		except ValueError:
 			logging.debug("BAD REQUEST %s"%self.request.body)
 		
@@ -52,6 +52,7 @@ class UserHandler(BaseHandler):
 
 	def login(self,username,password):
 		account = login(username,password)
+		print account, username, password, 'fucking work'
 		if account is False:
 			self.write(self.json_packet(retval=False, error = "Login information is incorrect"))
 		else:
