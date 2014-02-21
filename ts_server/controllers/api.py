@@ -3,13 +3,18 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-20 15:58:24
+# @Last Modified time: 2014-02-21 10:40:10
 
 from basehandler import BaseHandler
 import tornado.ioloop
 import logging
 import json
 from adapter import *
+
+#mixpanel analytics
+from mixpanel import Mixpanel
+
+mp = Mixpanel('96985230011fa4df100eeb76e01b969e')
 
 #format of a request - {'command',{PACKET}}, authentication through cookie session storage
 #format of a return - {'return':[T/F], error:[MESSAGE], return_code:[0...n], message:[]}
@@ -45,6 +50,7 @@ class UserHandler(BaseHandler):
 			self.load_session(account)
 			self.set_secure_cookie('SID',str(account.pk))
 			self.write(self.json_packet(retval=True, return_code = 0, packet = {}))
+			mp.track(self._SESSION_KEY, 'user registered')
 		else:
 			logging.debug("ACCOUNT exists")
 			self.write(self.json_packet(retval=False, error = "Account already exists"))
@@ -52,7 +58,6 @@ class UserHandler(BaseHandler):
 
 	def login(self,username,password):
 		account = login(username,password)
-		print account, username, password, 'fucking work'
 		if account is False:
 			self.write(self.json_packet(retval=False, error = "Login information is incorrect"))
 		else:
@@ -61,6 +66,7 @@ class UserHandler(BaseHandler):
 			
 			self.load_session(account)
 			self.write(self.json_packet(retval=True, return_code = 0, packet = {}))
+			mp.track(self._SESSION_KEY, 'user login')
 		self.finish()
 
 	def set_preferences(self,values):
@@ -74,8 +80,8 @@ class UserHandler(BaseHandler):
 		if isinstance(values,list):
 			set_preferences(self.session['AID'],values)
 			self.write(self.json_packet(retval=True, return_code = 1, packet = {}))
+			mp.track(self._SESSION_KEY, 'user set preference')
 		else:
-			logging.debug("Invalid interest format %s"%values)
-			string = "Invalid interest format %s"%values
-			self.write(self.json_packet(retval=False, error = string))
+			logging.info("Invalid interest format %s"%values)
+			self.write(self.json_packet(retval=False, error = "Invalid interest format %s"%values))
 		self.finish()

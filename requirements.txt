@@ -2,4 +2,8 @@ mongoengine==0.8.4
 py-bcrypt==0.4
 redis==2.8.0
 tornado
-bcrypt
+py-bcrypt
+mixpanel-py
+
+
+
