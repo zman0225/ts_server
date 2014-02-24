@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-24 12:41:54
+# @Last Modified time: 2014-02-24 15:07:31
 
 from lib.authentication import constant_time_compare
 from utils.utils import datetime_now
@@ -17,8 +17,9 @@ class Account(Document):
 	password = StringField(max_length=200, required=True)
 	first_name = StringField(max_length=30, verbose_name='first name')
 	last_name = StringField(max_length=30, verbose_name='last name')
+	email = StringField(max_length=30, verbose_name='email address',unique=True)
 	date_joined = DateTimeField(default=datetime_now,verbose_name='date joined')
-	age = IntField(required=True)
+	age = IntField()
 	gender = StringField(max_length=30)
 	#food preference 
 	preference = ListField(default=[],verbose_name='Food/Taste preference')
@@ -48,14 +49,14 @@ class Account(Document):
 		if a.count()==1:
 			return a[0]
 		else:
-			raise AccountNotFound,'Account %s' % uid
+			raise AccountNotFound,'Account %s' % email
 
-def register(username, password, remote_ip,init_conv=[]):
+def register(username, password, remote_ip,email):
 	try:
-		Account._by_username(username=username)
-		raise AccountExists
+		a = Account._by_username(username=username)
+		raise AccountExists, "%s is already in the database"
 	except AccountNotFound:
-		a = Account(username=username,password=bcrypt_password(password),registration_ip=remote_ip)
+		a = Account(username=username,password=bcrypt_password(password),registration_ip=remote_ip,email=email)
 		a.save()
 		return a
 		
@@ -70,7 +71,11 @@ def change_password(account, newpassword):
 
 def validate_login(username, password):
 	try:
-		a = Account._by_username(username)
+		a = None
+		if '@' in username:
+			a = Account._by_email(username)
+		else:
+			a = Account._by_username(username)
 		if validate_password(a, password):
 			return a
 		else:

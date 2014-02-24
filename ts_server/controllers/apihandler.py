@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-24 12:43:19
+# @Last Modified time: 2014-02-24 15:08:43
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -22,7 +22,7 @@ mp = Mixpanel('96985230011fa4df100eeb76e01b969e')
 #code: 1 - preference set 
 class ApiHandler(BaseHandler):
 	def initialize(self):
-		super(UserHandler,self).initialize()
+		super(ApiHandler,self).initialize()
 		self.cases = {'login':self.login,
 						'register':self.register,
 						'set_preferences':self.set_preferences,
@@ -34,7 +34,6 @@ class ApiHandler(BaseHandler):
 		if self.req is None:
 			return
 		try:
-			print "result ",self.req_val, isinstance(self.req_val,dict)
 			self.cases[self.req](**self.req_val)
 			return
 		except ValueError:
@@ -44,18 +43,20 @@ class ApiHandler(BaseHandler):
 
 	def validate_cookie(self,*args, **kwargs):
 		if self.validate():
-			logging.info("already validated, cookie looks fine")
+			self.write(self.json_packet(retval=True, return_code = 0, packet = {'display_name':self.session['username']}))
+		else:
+			self.write(self.json_packet(retval=False, error = "terrible cookie"))
 		self.finish()
 
-	def register(self,*args, **kwargs):
+	def register(self,username, password, gender, user_age, email):
 		ip_addr = self.request.remote_ip
-		account = new_ts_account(username, password, ip_addr, gender, age, email)
+		account = new_ts_account(username, password, ip_addr, gender, user_age, email)
 		if account is not False:
 			# session_key = generate_session_key(account.pk)
 			self._SESSION_KEY = str(account.pk)
 			self.load_session(account)
 			self.set_secure_cookie('SID',str(account.pk))
-			self.write(self.json_packet(retval=True, return_code = 0, packet = {}))
+			self.write(self.json_packet(retval=True, return_code = 0, packet = {'display_name':self.session['username']}))
 			# mp.track(self._SESSION_KEY, 'user registered')
 		else:
 			logging.debug("ACCOUNT exists")
@@ -72,7 +73,7 @@ class ApiHandler(BaseHandler):
 			self._SESSION_KEY = str(account.pk)
 			
 			self.load_session(account)
-			self.write(self.json_packet(retval=True, return_code = 0, packet = {}))
+			self.write(self.json_packet(retval=True, return_code = 0, packet = {'display_name':self.session['username']}))
 			# mp.track(self._SESSION_KEY, 'user login')
 		self.finish()
 

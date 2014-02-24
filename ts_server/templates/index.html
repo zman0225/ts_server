@@ -44,7 +44,7 @@
           <a class="navbar-brand logo" href="/">TimeSavor</a>
         </div>
         <div class="navbar-collapse collapse">
-			<ul class="nav navbar-nav">
+			<ul id="myTab" class="nav navbar-nav nav-tabs">
 			  <!-- <li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Home <b class="caret"></b></a>
 				<ul class="dropdown-menu">
@@ -52,9 +52,9 @@
 				  <li><a href="../templates/index-alt.html">Home: Alternative</a></li>
 				</ul>
 			  </li> -->
-			  <li class="active"><a href="#home" data-toggle="tab">Home</a></li>
-			<li><a href="#planner" data-toggle="tab">Planner</a></li>
-  			<li><a href="#preferences" data-toggle="tab">Preferences</a></li>
+			  <li class="active hidden"><a href="#home" data-toggle="tab">Home</a></li>
+			<li><a id="plannertab" href="#planner" data-toggle="tab">Planner</a></li>
+  			<li><a id="preferencestab" href="#preferences" data-toggle="tab">Preferences</a></li>
 			 <!--  <li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
 				<ul class="dropdown-menu">
@@ -95,16 +95,23 @@
 			  <button type="submit" class="btn btn-default">Go!</button>
 			</form> -->
 			<ul class="nav navbar-nav navbar-right">
-			
+				<li class="animated flipInX hidden" id="user-bar">
+					<a id="display_name" class="pull-right"></a>
+					<span class="pull-right user-bar-icons">
+					  <a id="logout"><i class="fa fa-sign-out" id="sign-out"></i></a>
+					  <!-- <a href="#"><i class="fa fa-cog"></i></a> -->
+					</span>
+			  	</li>
 			  <li id="sign-up"><a href="#" data-toggle="modal" data-target="#myModal">Sign Up</a></li>
 			  <li class="divider-vertical"></li>
 	          <li class="dropdown">
-	            <a class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
+	            <a id="sign-in" class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
 	            <div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px;">
-					  <input id="user_username" style="margin-bottom: 15px;" type="text" placeholder="email" size="30" />
+	                  <div style="top-margin:100px;"class="alert alert-danger fade in hidden" id="login_warning"></div>
+					  <input id="user_username" style="margin-bottom: 15px;" type="text" placeholder="username or email" size="30" />
 					  <input id="user_password" style="margin-bottom: 15px;" type="password" placeholder="password" size="30" />
 
-					  <input class="btn btn-primary" style="clear: left; width: 100%; height: 28px; font-size: 13px;" type="submit" value="Sign In" />
+					  <input class="btn btn-primary" style="clear: left; width: 100%; height: 28px; font-size: 13px;" type="button" id="sign_in" value="Sign In" />
 	            </div>
 	          </li>
 			  </ul>
@@ -381,7 +388,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel"><a class="logo">Sign Up to your account</a></h4>
       </div>
-      <div style="top-margin:100px;"class="alert alert-danger">test</div>
+      <div style="top-margin:100px;"class="alert alert-danger hidden" id="register_warning"></div>
       <div class="modal-body">
 	
 			<div class="form-white">
@@ -444,6 +451,9 @@
     <script src="../static/js/app.js"></script>
     <script src="../static/js/custom.js"></script>
 	<script src="../static/js/scrolltopcontrol.js"></script>
+	<script data-cfasync="false" type='text/javascript'>
+		validate_cookie();
+	</script>
 	<!-- begin olark code -->
 <script data-cfasync="false" type='text/javascript'>/*<![CDATA[*/window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){
 f[z]=function(){
