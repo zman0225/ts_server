@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:50:08
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-20 13:07:35
+# @Last Modified time: 2014-02-23 15:27:52
 
 import tornado.web
 import os.path
@@ -11,7 +11,8 @@ import redis
 import logging
 from adapter.administration import connect_to_db
 from lib.redissession import RedisSessionStore
-from controllers.api import UserHandler
+from controllers.apihandler import ApiHandler
+from controllers.webhandler import WebHandler
 
 # import threading
 secureCookieSecret = "sph7r2uf"
@@ -21,7 +22,8 @@ class Application(tornado.web.Application):
 		self.redis = redis.StrictRedis()
 		self.session_store = RedisSessionStore(self.redis)
 		handlers = [
-			(r"/",UserHandler),
+			(r"/",WebHandler),
+			(r"/api",ApiHandler),
 		]
 
 		#ideally load shit from .ini file...

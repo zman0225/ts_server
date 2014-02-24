@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-20 15:59:44
+# @Last Modified time: 2014-02-24 12:41:54
 
 from lib.authentication import constant_time_compare
 from utils.utils import datetime_now
@@ -18,7 +18,8 @@ class Account(Document):
 	first_name = StringField(max_length=30, verbose_name='first name')
 	last_name = StringField(max_length=30, verbose_name='last name')
 	date_joined = DateTimeField(default=datetime_now,verbose_name='date joined')
-
+	age = IntField(required=True)
+	gender = StringField(max_length=30)
 	#food preference 
 	preference = ListField(default=[],verbose_name='Food/Taste preference')
 
