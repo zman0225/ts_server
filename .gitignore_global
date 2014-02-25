@@ -4,6 +4,8 @@
 .dumps
 .egg-info
 .rdb
-
+.json
+.jpg
+.jpeg
 
 

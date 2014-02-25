@@ -17,6 +17,11 @@ body {
 	background: #ecf0f1;
 }
 
+#preference_panel{
+background: #ecf0f1;
+height:928px;
+}
+
 /* ===== Sticky Footer Trick ===== */
 
 .wrapper {
