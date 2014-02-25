@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-02-24 15:17:03
+* @Last Modified time: 2014-02-24 18:48:04
 */
 
 // regex yumminess
@@ -114,6 +114,7 @@ register_callback = function(response){
 	    	console.log("account created - login in now");
     		$('#myModal').modal('hide') 
 	    	validate(response);
+	    	clearAllInputs();
 	    }else{
 	    	$('#register_warning').text(response["error"]);
         	$("#register_warning").removeClass("hidden");
@@ -135,6 +136,7 @@ login_callback = function(response){
 	console.log(response);
 	if (response["return"]==true){
 	    	validate(response);
+	    	clearAllInputs();
 	    }else{
 	    	$('#login_warning').text(response["error"]);
         	$("#login_warning").removeClass("hidden");
@@ -222,3 +224,19 @@ $("#sign_in").on("click",
         
     }
 );
+
+
+// Utility functions
+clearAllInputs = function(){
+	$(':input').val('');
+}
+
+$( '#user_password' ).bind('keypress', function(e){
+   if ( e.keyCode == 13 ) {
+     $('#sign_in').trigger('click');
+   }
+ });
+
+
+
+

@@ -3,13 +3,14 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:59:15
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-20 15:47:20
+# @Last Modified time: 2014-02-25 00:55:22
 from utils.utils import datetime_now
 
 from mongoengine import *
 
 class Recipe(DynamicDocument):
 	name = StringField(max_length=30, verbose_name='food name', required=True)
+	image = FileField()
 	category = StringField(max_length=30, verbose_name='food category')
 	description = StringField(max_length=300, verbose_name='food description')
 	time_required = IntField()
@@ -43,6 +44,10 @@ class Recipe(DynamicDocument):
 		else:
 			raise RecipeNotFound,'Recipe %s' % name
 
+	def update_image(self,fs):
+		self.image.put(fs,content_type='image/jpeg')
+		self.save()
+
 def NewRecipe(name, description='', category=category, instructions = [], servings=0, time_required=0, ingredients={}):
 	try:
 		Recipe._by_name(username=username)
@@ -51,6 +56,7 @@ def NewRecipe(name, description='', category=category, instructions = [], servin
 		a = Recipe(name=name, description='', category=category, instructions = [], servings=0, time_required=0, ingredients={})
 		a.save()
 		return a
+
 
 class RecipeNotFound(Exception): pass
 class RecipeExists(Exception): pass
