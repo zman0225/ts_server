@@ -188,42 +188,16 @@ h2.oswald {
 
 /* ===== Pagination ===== */
 
-.body-green .pagination > .active > a,
-.body-green .pagination > .active > span,
-.body-green .pagination > .active > a:hover,
-.body-green .pagination > .active > span:hover,
-.body-green .pagination > .active > a:focus,
-.body-green .pagination > .active > span:focus {
+.pagination > .active > a,
+.pagination > .active > span,
+.pagination > .active > a:hover,
+.pagination > .active > span:hover,
+.pagination > .active > a:focus,
+.pagination > .active > span:focus {
   background-color: #27ae60;
   border-color: #27ae60;
 }
-.body-blue .pagination > .active > a,
-.body-blue .pagination > .active > span,
-.body-blue .pagination > .active > a:hover,
-.body-blue .pagination > .active > span:hover,
-.body-blue .pagination > .active > a:focus,
-.body-blue .pagination > .active > span:focus {
-  background-color: #3498db;
-  border-color: #3498db;
-}
-.body-red .pagination > .active > a,
-.body-red .pagination > .active > span,
-.body-red .pagination > .active > a:hover,
-.body-red .pagination > .active > span:hover,
-.body-red .pagination > .active > a:focus,
-.body-red .pagination > .active > span:focus {
-  background-color: #e74c3c;
-  border-color: #e74c3c;
-}
-.body-amethyst .pagination > .active > a,
-.body-amethyst .pagination > .active > span,
-.body-amethyst .pagination > .active > a:hover,
-.body-amethyst .pagination > .active > span:hover,
-.body-amethyst .pagination > .active > a:focus,
-.body-amethyst .pagination > .active > span:focus {
-  background-color: #9b59b6;
-  border-color: #9b59b6;
-}
+
 
 /* ===== Responsive Video =====*/
 

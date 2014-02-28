@@ -3,23 +3,24 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:59:15
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-25 00:55:22
+# @Last Modified time: 2014-02-27 22:42:27
 from utils.utils import datetime_now
 
 from mongoengine import *
 
 class Recipe(DynamicDocument):
-	name = StringField(max_length=30, verbose_name='food name', required=True)
-	image = FileField()
+	name = StringField(verbose_name='food name', required=True, unique=True)
+	image = FileField(default=None)
 	category = StringField(max_length=30, verbose_name='food category')
-	description = StringField(max_length=300, verbose_name='food description')
-	time_required = IntField()
+	description = StringField(verbose_name='food description')
+	time_required = DictField()
+	source = StringField()
 	servings = IntField()
 	date_added = DateTimeField(default=datetime_now,verbose_name='recipe date added')
 
 	#instruction and ingredients
 	#this is a sorted list so it should always be in this order
-	instruction = SortedListField(default=[],verbose_name='recipe preparation')
+	instruction = SortedListField(StringField())
 
 	#the ingredients list will be in the following format NAME:amount 
 	# amount will be in the following format - NUMBER:UNIT
@@ -44,17 +45,45 @@ class Recipe(DynamicDocument):
 		else:
 			raise RecipeNotFound,'Recipe %s' % name
 
-	def update_image(self,fs):
-		self.image.put(fs,content_type='image/jpeg')
+	@classmethod
+	def _by_category(cls,name):
+		a = cls.objects(category=name)
+		if a.count()==1:
+			return a[0]
+		else:
+			raise RecipeNotFound,'category %s' % name
+
+	@classmethod
+	def _get_image_by_name(cls,name):
+		r = cls._by_name(name)
+		if r.image:
+			image = r.image.read()
+			content_type = r.image.content_type
+			return (image,content_type)
+		return None
+
+	def set_image(self,fs, content_type):
+		if self.image:
+			self.image.put(fs,content_type=content_type)
+		else:
+			self.image.replace(fs,content_type=content_type)
 		self.save()
 
-def NewRecipe(name, description='', category=category, instructions = [], servings=0, time_required=0, ingredients={}):
+
+
+def add_recipe(name="", description='', category="", instructions = [], servings=0, 
+	time_required={}, ingredients={},source="",image=None):
 	try:
-		Recipe._by_name(username=username)
+		Recipe._by_name(name)
 		raise RecipeExists
 	except RecipeNotFound:
-		a = Recipe(name=name, description='', category=category, instructions = [], servings=0, time_required=0, ingredients={})
+		
+		a = Recipe(name=name, description=description, category=category, instructions=instructions,
+			servings=servings, time_required=time_required, ingredients=ingredients, source=source)
 		a.save()
+		if image: 
+			a.image.put(image,content_type='image/jpeg')
+			a.save()
 		return a
 
 

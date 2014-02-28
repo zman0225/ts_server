@@ -3,21 +3,17 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-25 00:15:55
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-25 14:55:33
+# @Last Modified time: 2014-02-27 22:09:39
 
 from utils.utils import datetime_now
 
 from mongoengine import *
 
 # let each week start on a sunday, and the days of the week be number from 1 - 7
-class plan(DynamicDocument):
-	menu = SortedListField(ObjectIdField())
-
+class Plan(DynamicDocument):
 	# the key is the object id and the value is the day (1 - 7)
-	menu_plan = DictField(default={}) 
-	number = IntField()
+	menu_plan = ListField(default=[]) 
 	owner = ObjectIdField(required=True)
-	subscribed = BooleanField(default=True)
 	date_added = DateTimeField(default=datetime_now,verbose_name='recipe date added')
 
 	@classmethod
@@ -39,3 +35,7 @@ class plan(DynamicDocument):
 		else:
 			raise RecipeNotFound,'Recipe %s' % name
 
+def new_plan(uid,recipe_list=[]):
+	week = Plan(owner=uid,menu_plan=recipe_list)
+	week.save()
+	return week

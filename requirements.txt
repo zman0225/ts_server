@@ -5,5 +5,3 @@ tornado
 py-bcrypt
 mixpanel-py
 
-
-
