@@ -3,9 +3,9 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-25 00:15:55
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-27 22:09:39
+# @Last Modified time: 2014-02-28 23:44:39
 
-from utils.utils import datetime_now
+from ts_server.utils import datetime_now
 
 from mongoengine import *
 

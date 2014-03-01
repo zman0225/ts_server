@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:46:18
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-25 19:56:54
+# @Last Modified time: 2014-02-28 23:46:43
 
 
 import logging
@@ -11,7 +11,7 @@ import tornado.options
 import tornado.ioloop
 import tornado.options
 
-from models.recipe import *
+from ts_server.models.recipe import *
 from lib.redisrelations import set_all_categories
 from tornado.options import define, options
 from config.middleware import Application

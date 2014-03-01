@@ -3,16 +3,16 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:50:08
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-27 23:12:48
+# @Last Modified time: 2014-02-28 23:45:16
 
 import tornado.web
 import os.path
 import redis
 import logging
-from adapter.administration import connect_to_db
-from lib.redissession import RedisSessionStore
-from controllers.apihandler import ApiHandler
-from controllers.webhandler import WebHandler, ImageHandler
+from ts_server.adapter.administration import connect_to_db
+from ts_server.lib.redissession import RedisSessionStore
+from ts_server.controllers.apihandler import ApiHandler
+from ts_server.controllers.webhandler import WebHandler, ImageHandler
 
 # import threading
 secureCookieSecret = "sph7r2uf"

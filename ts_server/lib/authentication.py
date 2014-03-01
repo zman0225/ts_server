@@ -3,9 +3,8 @@
 # @Author: ziyuanliu
 # @Date:   2013-12-07 00:51:32
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-01-17 22:14:19
+# @Last Modified time: 2014-02-28 23:46:09
 ########################################################################################################
-
 
 def constant_time_compare(actual,expected):
 	"""

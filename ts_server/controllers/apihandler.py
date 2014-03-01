@@ -3,13 +3,14 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-27 22:52:37
+# @Last Modified time: 2014-02-28 23:45:24
 
 from basehandler import BaseHandler
 import tornado.ioloop
+from tornado import web
 import logging
 import json
-from adapter import *
+from ts_server.adapter import *
 
 #mixpanel analytics
 from mixpanel import Mixpanel
@@ -30,7 +31,9 @@ class ApiHandler(BaseHandler):
 						'validate_cookie':self.validate_cookie,
 						'get_categories':self.get_categories,
 						'get_recipes':self.get_recipes,
-						'generate_menu':self.generate_menu
+						'get_latest_plan':self.get_latest_plan,
+						'generate_menu':self.generate_menu,
+						'set_subscribed':self.set_subscribed
 					}
 
 	def post(self):
@@ -43,14 +46,14 @@ class ApiHandler(BaseHandler):
 		except ValueError:
 			logging.debug("BAD REQUEST %s"%self.request.body)
 		
-		self.finish()
+		# self.finish()
 
 	def validate_cookie(self,*args, **kwargs):
 		if self.validate():
 			self.write(self.json_packet(retval=True, return_code = 0, packet = {'display_name':self.session['username']}))
 		else:
 			self.write(self.json_packet(retval=False, error = "terrible cookie"))
-		self.finish()
+		# self.finish()
 
 	def register(self,username, password, gender, user_age, email):
 		ip_addr = self.request.remote_ip
@@ -65,7 +68,7 @@ class ApiHandler(BaseHandler):
 		else:
 			logging.debug("ACCOUNT exists")
 			self.write(self.json_packet(retval=False, error = "Account already exists"))
-		self.finish()
+		# self.finish()
 
 	def login(self,username,password):
 		
@@ -79,7 +82,7 @@ class ApiHandler(BaseHandler):
 			self.load_session(account)
 			self.write(self.json_packet(retval=True, return_code = 0, packet = {'display_name':self.session['username']}))
 			# mp.track(self._SESSION_KEY, 'user login')
-		self.finish()
+		# self.finish()
 
 	def set_preferences(self,preference,meals):
 		if not self.validate():
@@ -94,26 +97,27 @@ class ApiHandler(BaseHandler):
 		else:
 			logging.info("Invalid interest format %s"%preference)
 			self.write(self.json_packet(retval=False, error = "Invalid interest format %s"%preference))
-		self.finish()
+		# self.finish()
 
 	def get_preferences(self,values):
 		if not self.validate():
 			return self.validate_cookie()
-		(prefs,meals) = get_preferences(self.session['AID'])
-		self.write(self.json_packet(retval=True, return_code = 1, packet = {'preference':prefs,'meals':meals}))
-		self.finish()
+		(prefs,meals,isSubscribed) = get_preferences(self.session['AID'])
+		self.write(self.json_packet(retval=True, return_code = 1, packet = {'preference':prefs,'meals':meals,"subscribed":isSubscribed}))
+		# self.finish()
 
 	def get_categories(self,values):
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'categories':get_all_categories()}))
-		self.finish()
+		# self.finish()
 		
 	def get_recipes(self,rid):
 		recipes = []
 		for r in rid:
 			recipes.append(get_recipe_by_id(r))
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'recipes':recipes}))
-		self.finish()
+		# self.finish()
 
+	@web.asynchronous
 	def generate_menu(self,values):
 		if not self.validate():
 			return self.validate_cookie()
@@ -122,9 +126,22 @@ class ApiHandler(BaseHandler):
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'plan':plan.menu_plan}))
 		self.finish()
 
+	@web.asynchronous
+	def get_latest_plan(self,values):
+		if not self.validate():
+			return self.validate_cookie()
 
+		plan = get_latest_plan(self.session['AID'])
+		self.write(self.json_packet(retval=True, return_code = 0, packet = {'plan':plan.menu_plan}))
+		self.finish()
 
+	def set_subscribed(self,values):
+		if not self.validate():
+			return self.validate_cookie()
 
+		value = True if values=='true' else False
+		set_subscribed(self.session['AID'],value)
+		# self.finish()
 
 
 

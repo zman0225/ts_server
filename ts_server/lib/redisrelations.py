@@ -3,11 +3,11 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-25 19:43:32
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-27 21:54:00
+# @Last Modified time: 2014-02-28 23:45:40
 
 import redis
 
-from models.recipe import *
+from ts_server.models.recipe import *
 r = redis.Redis()
 
 # keeps a set of all of the availiable food categories

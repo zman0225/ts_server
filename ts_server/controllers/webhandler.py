@@ -3,14 +3,14 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-23 15:23:56
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 00:34:23
+# @Last Modified time: 2014-02-28 23:45:34
 
 from basehandler import BaseHandler
 import tornado.ioloop
 from tornado.escape import url_escape
 import logging
 import json
-from adapter import *
+from ts_server.adapter import *
 
 #mixpanel analytics
 from mixpanel import Mixpanel
@@ -37,5 +37,5 @@ class ImageHandler(BaseHandler):
 		self.set_header('Content-type', ct)
 		self.set_header('Content-length', len(p))
 		self.write(p)
-		self.finish()
+		# self.finish()
 

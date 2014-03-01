@@ -3,8 +3,8 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:59:15
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-27 22:42:27
-from utils.utils import datetime_now
+# @Last Modified time: 2014-02-28 23:44:31
+from ts_server.utils import datetime_now
 
 from mongoengine import *
 

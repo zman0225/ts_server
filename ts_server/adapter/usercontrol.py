@@ -3,19 +3,29 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 10:43:16
+# @Last Modified time: 2014-02-28 23:53:29
 
-from models.account import *
-from models.recipe import *
-from models.plan import *
-from lib.redisrelations import get_recipe_by_category
+from ts_server.models.account import *
+from ts_server.models.recipe import *
+from ts_server.models.plan import *
+from ts_server.lib.redisrelations import get_recipe_by_category
 
 import logging
 import redis
 import random
 import cPickle
+import time
 
 r = redis.Redis()
+
+def timing(f):
+    def wrap(*args):
+        time1 = time.time()
+        ret = f(*args)
+        time2 = time.time()
+        print '%s function took %0.3f ms' % (f.func_name, (time2-time1)*1000.0)
+        return ret
+    return wrap
 
 def new_account(username,password,ip_addr,email):
 	try:
@@ -45,11 +55,18 @@ def set_preferences(uid,prefs,meals):
 
 def get_preferences(uid):
 	acc = Account._by_id(uid)
-	return (acc.preference,acc.meals)
+	logging.info("sub ret is now "+str(acc.subscribed))
+	return (acc.preference,acc.meals,acc.subscribed)
+
+def set_subscribed(uid,val):
+	acc = Account._by_id(uid)
+	acc.update(set__subscribed=val)
+	logging.info("sub is now "+str(acc.subscribed))
 
 def get_all_categories():
 	return list(r.smembers('categories'))
 
+@timing
 def get_picture_by_name(name):
 	r = Recipe._by_name(name)
 	return get_picture_by_id(rid=None,recipe_obj=r)
@@ -74,14 +91,13 @@ def get_picture_by_id(rid,recipe_obj=None):
 		r.setex(key,pickled_object,120)
 		return (content_type,img)
 
-def get_recipe_by_id(name):
+def get_recipe_by_name(name):
 	pass
 
 def get_recipe_by_id(rid, recipe_obj=None):
 	rid = str(rid) if rid is not None else str(recipe_obj.pk)
 	key = "recipe:"+str(rid)
 	if r.exists(key):
-		logging.info("exists!")
 		r.expire(key,240)
 		kw = cPickle.loads(r.get(key))
 		return kw
@@ -103,9 +119,15 @@ def login(username,password):
 	return validate_login(username,password)
 
 # Move to processing server
-
-def create_plan(uid):
+def get_latest_plan(uid):
 	acc = Account._by_id(uid)
+	plan = acc.current_plan
+	if plan is not None:
+		return plan
+	return create_plan(uid=uid,acc_obj=acc)
+
+def create_plan(uid, acc_obj=None):
+	acc = Account._by_id(uid) if acc_obj is None else acc_obj
 	pref = acc.preference
 	meals = acc.meals
 	plans = []
@@ -128,8 +150,9 @@ def create_plan(uid):
 
 
 	pref = new_plan(uid,plans)
+	acc.current_plan = pref
+	acc.save()
 	return pref;
-	# new_plan(uid,recipe_list)
 
 
 

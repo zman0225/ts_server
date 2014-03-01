@@ -3,14 +3,15 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 00:52:56
+# @Last Modified time: 2014-02-28 23:46:56
 
-from lib.authentication import constant_time_compare
-from utils.utils import datetime_now
-from utils.utils import *
+from ts_server.lib.authentication import constant_time_compare
+from ts_server.utils import *
 from mongoengine import *
 import bcrypt
 import logging
+
+from ts_server.models.plan import Plan
 
 workfactor = 12
 class Account(Document):
@@ -26,6 +27,7 @@ class Account(Document):
 	preference = ListField(default=[],verbose_name='Food/Taste preference')
 	subscribed = BooleanField(default=True)
 	meals = IntField(default=0)
+	current_plan = ReferenceField(Plan, default=None)
 
 	def set_meals(self,num):
 		self.update(set__meals=num)

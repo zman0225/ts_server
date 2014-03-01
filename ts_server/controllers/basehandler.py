@@ -3,11 +3,11 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:17:33
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-27 15:55:42
+# @Last Modified time: 2014-02-28 23:46:20
 
-from lib.redissession import Session
-from lib.authentication import *
-from adapter import *
+from ts_server.lib.redissession import Session
+from ts_server.lib.authentication import *
+from ts_server.adapter import *
 
 import json
 import tornado.web

@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # @Author: ziyuanliu
-# @Date:   2014-02-20 11:52:32
+# @Date:   2014-03-01 12:19:07
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 23:41:35
-
-from utils import *
+# @Last Modified time: 2014-03-01 12:19:07
