@@ -3,16 +3,17 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-01 12:56:19
+# @Last Modified time: 2014-03-02 00:46:11
 
 from ts_server.lib.authentication import constant_time_compare
 from mongoengine import *
 import bcrypt
 import logging
 from ts_server.utils import datetime_now
-
+from ts_server.lib.analytics import mp
 from ts_server.models.plan import Plan
 workfactor = 12
+
 class Account(Document):
 	username = StringField(max_length=20, unique=True, required=True)
 	password = StringField(max_length=200, required=True)
@@ -93,6 +94,7 @@ def validate_login(username, password):
 		else:
 			a = Account._by_username(username)
 		if validate_password(a, password):
+			mp.track(str(a.pk), 'login')
 			return a
 		else:
 			return False

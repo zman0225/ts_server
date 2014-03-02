@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-01 21:47:50
+* @Last Modified time: 2014-03-02 00:54:58
 */
 
 // regex yumminess
@@ -96,6 +96,7 @@ togglePreference = function(con){
 preference_callback = function(response){
 	if (response["return"]==true){
 		$("#preference_container").empty();
+		console.log(response);
     	$.each( response['packet']['categories'], function( index, value ){
     		var li = $('<li></li>');
     		var al = $('<a onclick="togglePreference(this);"></a>');

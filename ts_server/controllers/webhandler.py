@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-23 15:23:56
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 23:45:34
+# @Last Modified time: 2014-03-02 00:44:15
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -11,11 +11,7 @@ from tornado.escape import url_escape
 import logging
 import json
 from ts_server.adapter import *
-
-#mixpanel analytics
-from mixpanel import Mixpanel
-
-mp = Mixpanel('96985230011fa4df100eeb76e01b969e')
+from ts_server.lib.analytics import *
 
 #format of a request - {'command',{PACKET}}, authentication through cookie session storage
 #format of a return - {'return':[T/F], error:[MESSAGE], return_code:[0...n], message:[]}

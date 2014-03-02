@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-01 21:49:22
+# @Last Modified time: 2014-03-02 01:03:54
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -18,6 +18,8 @@ import time
 
 r = redis.Redis()
 
+from ts_server.lib.analytics import mp
+
 def timing(f):
     def wrap(*args):
         time1 = time.time()
@@ -30,7 +32,7 @@ def timing(f):
 def new_account(username,password,ip_addr,email):
 	try:
 		account = register(username,password,ip_addr,email)
-		logging.info("Account created [%s]"%account.username)
+		logging.info("Account created [%s]"%(str(account.username)))
 		return account
 	except Exception as e:
 		logging.info("Account already exists! "+str(e))
@@ -43,17 +45,31 @@ def new_ts_account(username, password, ip_addr, gender, age, email):
 		acc.age = int(age)
 		acc.email = email
 		acc.save()
-		logging.info("account created!")
+		mp.people_set(str(acc.pk), {
+		    '$username'    : username,
+		    '$email'         : email,
+		    '$age'         : age,
+		    '$ip'		:ip_addr	
+		})
+		mp.track(str(acc.pk), 'register')
+		logging.info("account %s created!"%(str(acc.pk)))
 		return acc
 	else:
 		return False
 
 def set_preferences(uid,prefs,meals):
 	acc = Account._by_id(uid)
+	mp.track(uid, 'preference change', {
+		'new preferences':prefs,
+		'new meals planned':meals,
+		'old preferences':acc.preference,
+		'old meals planned':acc.meals
+		})
 	acc.set_preference(prefs)
 	acc.set_meals(meals)
 
 def get_preferences(uid):
+	logging.info(uid)
 	acc = Account._by_id(uid)
 	logging.info("sub ret is now "+str(acc.subscribed))
 	return (acc.preference,acc.meals,acc.subscribed)
@@ -61,6 +77,10 @@ def get_preferences(uid):
 def set_subscribed(uid,val):
 	acc = Account._by_id(uid)
 	acc.update(set__subscribed=val)
+	mp.track(uid, 'subscribed' if val else 'unsubscribed')
+	mp.people_append(uid, {
+	    'subscribed' : str(val)
+	})
 	logging.info("sub is now "+str(acc.subscribed))
 
 def get_all_categories():
@@ -103,7 +123,7 @@ def get_recipe_by_id(rid, recipe_obj=None):
 		return kw
 	else:
 		re = recipe_obj if recipe_obj is not None else Recipe._by_id(rid) 
-
+		logging.info(rid)
 		kw = {"name":re.name,"category":re.category,"description":re.description,"time_required":re.time_required,
 			"source":re.source,"servings":re.servings,"instructions":re.instructions, "ingredients":re.ingredients}
 
@@ -121,13 +141,16 @@ def login(username,password):
 
 # Move to processing server
 def get_latest_plan(uid):
+	
 	acc = Account._by_id(uid)
 	plan = acc.current_plan
 	if plan is not None:
+		mp.track(uid, 'requesting latest plan')
 		return plan
 	return create_plan(uid=uid,acc_obj=acc)
 
 def create_plan(uid, acc_obj=None):
+	mp.track(uid, 'generating new plan')
 	acc = Account._by_id(uid) if acc_obj is None else acc_obj
 	pref = acc.preference
 	meals = acc.meals
