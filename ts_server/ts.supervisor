@@ -1,0 +1,13 @@
+# -*- conf -*-
+
+[program:ts]
+process_name = ts-%(process_num)s
+environment = PYTHONPATH="%(here)s/apps/ts_server/current"
+command = python -m ts_server.__init__
+	--port=%(process_num)s
+	--log_file_prefix=%(here)s/logs/%(program_name)s-%(process_num)s.log
+# Increase numprocs to run multiple processes on different ports.
+# Note that the chat demo won't actually work in that configuration
+# because it assumes all listeners are in one process.
+numprocs = 4
+numprocs_start = 8000

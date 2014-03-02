@@ -21,8 +21,8 @@ from ts_server.email.email_worker import EmailWorker
 secureCookieSecret = "sph7r2uf"
 class Application(tornado.web.Application):
 	def __init__(self):
-		self.mongo_db = connect_to_db("ts-server")
-		# self.mongo_db = connect_to_db("ts-server",'23.253.209.158',27017,'ts_server','a2e7rqej')
+		#self.mongo_db = connect_to_db("ts-server")
+		self.mongo_db = connect_to_db("ts-server",'23.253.209.158',27017,'ts_server','a2e7rqej')
 		stopper = threading.Event()
 		self.emailer = EmailWorker(0,stopper)
 		self.emailer.start()
