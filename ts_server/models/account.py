@@ -3,16 +3,15 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 23:46:56
+# @Last Modified time: 2014-03-01 12:56:19
 
 from ts_server.lib.authentication import constant_time_compare
-from ts_server.utils import *
 from mongoengine import *
 import bcrypt
 import logging
+from ts_server.utils import datetime_now
 
 from ts_server.models.plan import Plan
-
 workfactor = 12
 class Account(Document):
 	username = StringField(max_length=20, unique=True, required=True)

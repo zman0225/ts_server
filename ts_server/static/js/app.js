@@ -2,12 +2,12 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-02-28 10:34:30
+* @Last Modified time: 2014-03-01 21:47:50
 */
 
 // regex yumminess
 var username = "";
-var emailRegex = /^(([^<>()[\]\\.,;:!\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+var emailRegex = /^(([^<>()[\]\\.,;:!\s@\"]+(\.[^<>()[\]\\.,;:!\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 var usernameRegex = /^[a-z0-9_-]{5,16}$/; 
 var passwordRegex = /^[a-z0-9_-]{5,16}$/; 
 var ageRegex = /^(1[3-9]|[2-9][0-9])$/;
@@ -20,6 +20,9 @@ var gender_valid = false;
 
 var preferences = [];
 var meals = 0;
+var menu_plan = null;
+var needNew= false;
+var subscribed = null;
 // create account submit button
 EnableSubmit = function(val)
 {
@@ -33,13 +36,26 @@ isNumber = function(n) {
 clear_planner = function(){
 	$("#description").empty();
 	$("#recipe_picture").empty();
+	$("#days").empty();
+	$('#planner-table').empty();
 }
 
 isInputsValid = function(){
 	return (username_valid&&email_valid&&password_valid&&age_valid);
 }
 
-$('input[type="radio"]').on('select',function(){alert("text")});
+$('#subscribe-checkbox').on('switchChange', function (e, data) {
+  var $element = $(data.el);
+      value = data.value;
+      subscribed = value;
+      var packet = {};
+	packet.set_subscribed = {}
+    packet.set_subscribed.values = value;
+    var jsonPacket = JSON.stringify(packet);
+    AjaxRequest(jsonPacket,function(response){});
+		console.log(value);
+  		
+});
 
 togglePreference = function(con){
 	var parent = (con.parentNode);
@@ -93,7 +109,21 @@ preference_callback = function(response){
 		Array.prototype.slice.call(children).forEach(function(entry) {
 		    entry.className="";
 		});
-		// load the presets
+		load_preference();
+
+		$.each( preferences, function( index, value ){
+				var child = $('a:contains("'+value+'")')[0];
+				(child.parentNode).className='active';
+	    		// $('input[type="button"][value="'+value+'"]').removeClass('btn-primary').addClass('btn-success');
+	    		preferences.push(value);
+			});
+	    }else{
+	    	
+	    }
+}
+
+load_preference = function(){
+	// load the presets
     	var packet = {};
 		var placeholder = {};
 		$('.main').text(username+"'s Preferences");
@@ -101,32 +131,45 @@ preference_callback = function(response){
         packet.get_preferences = placeholder;
         var jsonPacket = JSON.stringify(packet);
         AjaxRequest(jsonPacket,get_preferences_callback);
-	    }else{
-	    	
-	    }
 }
 
 $('#plannertab').on('click',function(){
+	clear_planner();
 	$("html, body").animate({ scrollTop: 0 }, "slow");
 	$('#planner-table').hide();
+	$('#generate_grocery').hide();
 	$('#load_bar_div').show(10);
 	$('#load_bar').show();
 	$('#planner_panel').height(160);
-	clear_planner();
-	
-
-	$('#load_bar').animate({ width: "110%" },2500,function() {
+	if(menu_plan!=null){
+        		console.log(menu_plan.length);
+        		clear_planner();
+        		add_recipes_to_plan(menu_plan);
+        	}else if(needNew==true){
+        		menu_plan=null;
+        		var packet = {};
+				packet.generate_menu = {}
+			    packet.generate_menu.values = "";
+			    var jsonPacket = JSON.stringify(packet);
+			    AjaxRequest(jsonPacket,planner_callback);
+        	}else{
+	        	var packet = {};
+				packet.get_latest_plan = {}
+			    packet.get_latest_plan.values = "";
+			    var jsonPacket = JSON.stringify(packet);
+			    AjaxRequest(jsonPacket,planner_callback);
+		    }
+	$('#load_bar').animate({ width: "110%" },400,function() {
 	    
         $('#planner_panel').animate({height:600},1000);
         $('#planner-table').show(1500, function(){
         	$('#load_bar_div').hide(1000);
-        	$('#planner_panel').animate({height:580},500);
+        	$('#planner_panel').animate({height:680},500);
         	$('#load_bar').animate({ width: "0%" });
-        	var packet = {};
-	packet.generate_menu = {}
-    packet.generate_menu.values = "";
-    var jsonPacket = JSON.stringify(packet);
-    AjaxRequest(jsonPacket,planner_callback);
+        	$('.carousel').carousel('pause');
+
+        	
+		    $('#generate_grocery').show();
         });
 	  }
 		
@@ -136,8 +179,8 @@ $('#plannertab').on('click',function(){
 
 planner_callback = function(response){
 	if (response["return"]==true){
-		console.log(response);
 		get_recipes(response["packet"]["plan"]);
+		needNew=false;
 	    }else{
 	    	
 	    }
@@ -152,46 +195,112 @@ get_recipes = function(rid){
     AjaxRequest(jsonPacket,recipes_callback);
 }
 
-get_image = function(recipe_name){
-    var replaced = recipe_name.split(' ').join('+');
-    var img = $('<img height="130" width="130" id="dynamic" class="null">');
-	img.attr('src', "/image/"+replaced);
-	var li = $('<th></th>');
-	img.appendTo(li); 
-	li.appendTo('#recipe_picture');
-}
-
 recipes_callback = function(response){
 	if (response["return"]==true){
-		console.log(response);
-		$.each( response["packet"]["recipes"], function( index, value ){
-			console.log(value);
-				get_image(value['name']);
-
-				var div = $('<div></div>');
-				var h = $('<h4 style="position: relative;margin-top: 0;"></h4>');
-				h.text(value['name']);
-
-				var descrip = $('<p align="top"></p>');
-				descrip.text(value['description']);
-				var li = $('<th></th>');
-
-				h.appendTo(div);
-				descrip.appendTo(div);
-
-				div.appendTo(li);
-				li.appendTo('#description');
-			});
-		var packet = {};
-		var placeholder = {};
+		menu_plan = response["packet"]["recipes"];
+		add_recipes_to_plan(menu_plan);
     }else{
 	    	
     }
 }
 
+
+
+bind_selector = function(sel){
+	sel.click(function() {
+		var ind = $(this).data("idx");
+	    $('#recipe-carousel').children().each(function( index, value ){
+	    	if(index==ind){
+	    		$(this).addClass('active');
+	    	}
+	    	else{
+	    		$(this).removeClass('active');
+	    	}
+	    });
+	    $('#recipe_modal').modal('show');
+	});
+}
+
+get_image = function(recipe_name){
+    var replaced = recipe_name.split(' ').join('+');
+    var img = $('<img id="dynamic">');
+	img.attr('src', "/image/"+replaced);
+	return img;
+}
+
+add_recipes_to_plan = function(data){
+	var ctr = 1;
+	$.each( data, function( index, value ){
+		var ul = $('<ul style="margin: 0 auto;"></ul>');
+		$.each(value['ingredients'], function(k, v) {
+		    //display the key and value pair
+		    var li = $('<li style="margin:0!important; padding:0!important;"></li>');
+		    li.append($('<p></p>').text(k + ' - ' + v));
+		    ul.append(li);
+		});
+
+		var instr_ol = $('<ol style="margin: 0 auto;"></ol>');
+
+		for (var i = 0; i < value['instructions'].length; i++){
+			var lii = $('<li style="margin:0!important; padding:0!important;"></li>');
+		    lii.append($('<p></p>').text(value['instructions'][i]));
+		    instr_ol.append(lii);
+		    console.log("asdas");
+		}
+
+		var day = "Day "+String(ctr);
+		var a = get_image(value['name']);
+		var name = $('<h4 style="color: #27ae60 !important;" ></h4>');
+		name.text(value['name']);
+
+		// will add recipe to the carousel 
+		var recipe_li = $('<div style="overflow:scroll;height:500px;" class="item"></div>')
+
+		recipe_li.append(name.clone());
+		recipe_li.append('<hr>');
+		var clone_i = a.clone();
+		clone_i.attr('height','400');
+		clone_i.attr('width','400');
+		recipe_li.append(clone_i);
+		recipe_li.append('<hr>');
+		recipe_li.append(ul);
+		recipe_li.append('<hr>');
+		recipe_li.append(instr_ol);
+
+
+		$('#recipe-carousel').append(recipe_li);
+
+		//
+		var div = $('<div id="recipe_div" style="height: 450px" ></div>').data("idx", ctr-1);
+		bind_selector(div);
+		
+
+		var descrip = $('<p style="color: #27ae60 !important;" align="top"></p>');
+		descrip.text(value['description']);
+		var li = $('<li style="display: table-cell; overflow: hidden; position: relative; width: 150px; "></li>');
+		var li1 = $('<h3 width="130px;"></h3>');
+		var temp = $('<p style="color: #27ae60 !important;" ></p>');
+		temp.text(day);
+		// li1.html = temp;
+		temp.appendTo(li1);
+
+		li1.appendTo(div);
+		div.append('<hr>');
+		a.attr('height','130px');
+		a.attr('width','130px');
+		a.appendTo(div);
+		ctr++;
+		name.appendTo(div);
+		descrip.appendTo(div);
+
+		div.appendTo(li);
+		li.appendTo('#planner-table');
+	});
+}
+
 preference_set_callback = function(response){
 	if (response["return"]==true){
-		console.log(response);
+		menu_plan=null;
 		$("#plannertab").trigger('click');
 	    }else{
 	    	
@@ -201,17 +310,22 @@ preference_set_callback = function(response){
 get_preferences_callback = function(response){
 	if (response["return"]==true){
 		preferences = [];
-			console.log(response["packet"]["preference"]);
-			console.log(response["packet"]["meals"]);
-			meals = response["packet"]["meals"];
-			if(meals!=0)
-				$('li[value='+meals+']')[0].className="active"
-			$.each( response["packet"]["preference"], function( index, value ){
-				var child = $('a:contains("'+value+'")')[0];
-				(child.parentNode).className='active';
-	    		// $('input[type="button"][value="'+value+'"]').removeClass('btn-primary').addClass('btn-success');
-	    		preferences.push(value);
-			});
+		meals = response["packet"]["meals"];
+		var isChecked = $('#subscribe-checkbox').is(':checked');
+		subscribed = isChecked;
+		if(response["packet"]["subscribed"]==true&&!isChecked){
+			$('#subscribe-checkbox').bootstrapSwitch('toggleState');
+			subscribed = true;
+		}else if(response["packet"]["subscribed"]==false&&isChecked){
+			$('#subscribe-checkbox').bootstrapSwitch('toggleState');
+			subscribed = false;
+		}
+
+		if(meals!=0)
+			$('li[value='+meals+']')[0].className="active"
+		$.each( response["packet"]["preference"], function( index, value ){
+			preferences.push(value);
+		});
 			
 	    }else{
 	    	
@@ -237,8 +351,24 @@ $('#generate_menu').on('click',function(){
     var jsonPacket = JSON.stringify(packet);
     // console.log(jsonPacket);
     if(preferences.length>0){
+    	needNew=true;
     	AjaxRequest(jsonPacket,preference_set_callback);
     }
+});
+
+$('#generate_grocery').on('click',function(){
+	$('#grocery_list').empty();
+	$.each(menu_plan, function(ind, value) {
+		$.each(value['ingredients'], function(k,v) {
+			var li = $('<li style="margin:0!important; padding:0!important;"></li>');
+		    li.append($('<p></p>').text(k + ' - ' + v));
+		    $('#grocery_list').append(li);
+		});
+	});
+	// console.log(dict);
+	console.log("clicked");
+	$("#grocery_modal").modal('show');
+	
 });
 
 enableCreateAccount = function(){
@@ -339,7 +469,7 @@ AjaxRequest = function(dataPacket,callback)
 register_callback = function(response){
 	if (response["return"]==true){
 	    	console.log("account created - login in now");
-    		$('#myModal').modal('hide') 
+    		$('#register').modal('hide');
 	    	validate(response);
 	    	clearAllInputs();
 	    }else{
@@ -382,6 +512,7 @@ validate = function(response){
 	$('#planner').removeClass('hidden');
 	$('#preferencestab').removeClass('hidden');
 	$('#plannertab').removeClass('hidden');
+	load_preference();
 }
 
 unvalidate = function(){

@@ -3,29 +3,30 @@
 import json
 import os.path
 
-from adapter.usercontrol import new_recipe
-from adapter.administration import connect_to_db
+from ts_server.adapter.usercontrol import new_recipe
+from ts_server.adapter.administration import connect_to_db
 def process_recipe(recipe):
 	name = recipe['name']
 	category = recipe['category']
 	instruction_list = list(recipe['instruction'])
 	ingredients_dict = dict(recipe['ingredients'])
+	new_dict = {}
 	for key in ingredients_dict.keys():
 		new_key = key.replace('.','')
 		new_key = new_key.replace('?','')
-		ingredients_dict[new_key]=ingredients_dict[key]
-		del ingredients_dict[key]
+		new_dict[new_key]=ingredients_dict[key]
+	print new_dict
 	time_dict = dict(recipe['time'])
 	source = recipe['source'].encode('ascii', 'ignore')
 	servings = recipe['servings']
 	description = recipe['description'].encode('ascii', 'ignore')
 
-	image_fs = 'upload/'+name+".jpg"
+	image_fs = name+".jpg"
 	image = None
 	if os.path.isfile(image_fs):
 		image = open(image_fs,'r')
 
-	recipe = new_recipe(name=name, description=description, category=category, instructions = instruction_list, servings=servings, time_required=time_dict, ingredients=ingredients_dict,source=source,image=image)
+	recipe = new_recipe(name=name, description=description, category=category, instructions = instruction_list, servings=servings, time_required=time_dict, ingredients=new_dict,source=source,image=image)
 	image.close()
 
 def read_json(fs):
@@ -39,4 +40,4 @@ def read_json(fs):
 
 if __name__ == '__main__':
 	connect_to_db("ts-server")
-	read_json('upload/initial.json')
+	read_json('initial.json')

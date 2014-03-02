@@ -18,8 +18,35 @@ body {
 }
 
 #preference_panel{
-background: #ecf0f1;
+/*background: #ecf0f1;*/
 height:928px;
+}
+
+#navcontainer ul
+{
+margin-top: -10px;
+padding: 0;
+list-style-type: none;
+text-align: center;
+}
+
+#navcontainer ul li { display: inline; width:130px;}
+
+#navcontainer ul li div
+{
+text-decoration: none;
+/*color: #fff;
+background-color: #036;*/
+}
+
+#sign-up{
+	cursor: pointer;
+}
+#navcontainer ul li div:hover
+{
+	cursor: pointer;
+	color: #fff;
+	background-color: #369;
 }
 
 /* ===== Sticky Footer Trick ===== */
@@ -1053,7 +1080,7 @@ a.carousel-arrow-next {
 
 .crp-showcase {
 	width: 100%;
-	margin-top: -30px;
+	margin-top: -50px;
 	margin-bottom: 100px;
 	padding-top: 50px;
 	padding-bottom: 200px;

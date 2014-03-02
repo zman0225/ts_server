@@ -56,37 +56,6 @@
 			  <li class="active hidden"><a href="#home" data-toggle="tab">Home</a></li>
 			<li><a id="plannertab" href="#planner" data-toggle="tab">Planner</a></li>
   			<li><a id="preferencestab" href="#preferences" data-toggle="tab">Preferences</a></li>
-			 <!--  <li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
-				<ul class="dropdown-menu">
-				  <li><a href="../templates/about-us.html">About Us</a></li>
-				  <li><a href="../templates/blog.html">Blog</a></li>
-				  <li><a href="../templates/blog-story.html">Blog Item</a></li>
-				  <li><a href="../templates/contact-us.html">Contact Us</a></li>
-				  <li><a href="../templates/error-page.html">Error Page</a></li>
-				  <li><a href="../templates/faqs.html">FAQs</a></li>
-				  <li><a href="../templates/gallery.html">Gallery</a></li>
-				  <li><a href="../templates/gallery-item.html">Gallery Item</a></li>
-				  <li><a href="../templates/pricing.html">Pricing</a></li>
-				  <li><a href="../templates/responsive-video.html">Responsive Video</a></li>
-				  <li><a href="../templates/sign-in.html">Sign In & Sign Up</a></li>
-				</ul>
-			  </li>
-			  <li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Blog <b class="caret"></b></a>
-				<ul class="dropdown-menu">
-				  <li><a href="blog.html">Blog</a></li>
-				  <li><a href="blog-story.html">Blog Item</a></li>
-				</ul>
-			  </li>
-			  <li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Gallery <b class="caret"></b></a>
-				<ul class="dropdown-menu">
-				  <li><a href="../templates/gallery.html">Gallery</a></li>
-				  <li><a href="../templates/gallery-item.html">Gallery Item</a></li>
-				</ul>
-			  </li>
-			  <li class="visible-xs"><a href="../templates/sign-in.html">Sign In & Sign Up</a></li> -->
 			</ul>
 			<!-- Search form for extra small screens -->
 			<!-- <form class="navbar-form navbar-left visible-xs" role="search">
@@ -107,7 +76,7 @@
 
 			  	</li>
 
-			  <li id="sign-up"><a href="#" data-toggle="modal" data-target="#myModal">Sign Up</a></li>
+			  <li id="sign-up"><a data-toggle="modal" data-target="#register">Sign Up</a></li>
 			  <li class="divider-vertical"></li>
 	          <li class="dropdown">
 	            <a id="sign-in" class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
@@ -267,12 +236,14 @@
 			  <div class="crp-showcase">
 				
 			  	<div class="row">
-				  	<div id="planner_panel" style="background-color:rgba(1, 1, 1, 0.75); border-radius:25px;" class="col-sm-8 col-sm-offset-2">
+				  	<div  class="col-sm-8 col-sm-offset-2">
 			  				
-			  				<div align="center">
+			  				<div id="planner_panel" align="center" class="modal-content">
 			  				<h1 align="center" class="planner-title">Your week</h1>
-			  				<label for="subscription_check">Subscribed: </label>
-								<input id="subscription_check" align="center" class="pull-right" name="my-checkbox" type="checkbox" data-off-color="danger" checked data-on-color="success" checked data-size="mini" checked>
+
+			  				<div  style="position:absolute; position:absolute; top:0; right:0;" class="inline">
+			  				<label style="color: #27ae60 !important;display:inline;" for="subscription_check">Subscribed: </label>
+								<input id="subscribe-checkbox" align="center" class="pull-right" name="subscribe-checkbox" type="checkbox" data-off-color="danger" checked data-on-color="success" checked data-size="mini" checked>
 			  				</div>
 
 			  				<div id="load_bar_div"class="progress progress-striped active">
@@ -280,23 +251,17 @@
 							    <span class="sr-only">45% Complete</span>
 							  </div>
 							</div>
-							<table id="planner-table" align="center" width="910">
-							  <tr>
-							  <td width="130">Sunday</td>
-							  <td width="130">Monday</td>
-							  <td width="130">Tuesday</td>
-							  <td width="130">Wednesday</td>
-							  <td width="130">Tuesday</td>
-							  <td width="130">Friday</td>
-							  <td width="130">Saturday</td>
-							  </tr>
+							<div>
+							<div id="navcontainer">
+								<ul id="planner-table">
+								</ul>
+							</div>
 
-							  <tr id="recipe_picture">
-							  </tr>
-							  <tr height="10px"></tr>
-							  <tr id="description">
-							  </tr>
-							</table>
+							
+							</div>
+			  				<button type="button" id="generate_grocery" class="btn btn-primary btn-lg">Generate Grocery List</button>
+
+							</div>
 
 				  	</div>
 				 </div>
@@ -373,12 +338,12 @@
 	
 	<!-- MODAL -->
 	<!-- sign up modal-->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="registerLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel"><a class="logo">Sign Up to your account</a></h4>
+        <h4 class="modal-title" id="registerLabel"><a class="logo">Sign Up to your account</a></h4>
       </div>
       <div style="top-margin:100px;"class="alert alert-danger hidden" id="register_warning"></div>
       <div class="modal-body">
@@ -396,16 +361,6 @@
 				  <div class="form-group">
 				  	<label class="control-label" for="password">Password</label>
 				  	<input type="password" class="form-control" id="password"  onkeyup="ValidateInput(this);" placeholder="Password">
-					<!-- <div class="row">
-					  <div class="col-sm-6">
-					  <label for="password2">Password</label>
-					  <input type="password" class="form-control" id="password2" placeholder="Password">
-					  </div>
-					  <div class="col-sm-6">
-					  <label for="password2">Repeat password</label>
-					  <input type="password" class="form-control" id="password3" placeholder="Password">
-					  </div>
-					</div> -->
 				  </div>
 				  <div class="form-group">
 				    <label class="control-label" for="user_age">Age</label>
@@ -435,6 +390,49 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="recipe_modal" tabindex="-1" role="dialog" aria-labelledby="recipeLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- <div class="modal-body"> -->
+		<div class="glr-show">
+			  <!-- Image Carousel -->
+			  <div id="glr-carousel" class="carousel slide" data-ride="carousel">
+			    <!-- Wrapper for slides -->
+			    <div id="recipe-carousel" class="carousel-inner">
+<!-- 				 <div class="item active">
+				    
+				  </div> -->
+			    </div>
+			    <!-- Controls -->
+			    <a class="carousel-arrow carousel-arrow-prev" href="#glr-carousel" data-slide="prev">
+				  <i class="fa fa-angle-left"></i>
+			    </a>
+			    <a class="carousel-arrow carousel-arrow-next" href="#glr-carousel" data-slide="next">
+				  <i class="fa fa-angle-right"></i>
+			    </a>
+			  </div>
+		    </div>
+	<!-- 		</div> -->
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="modal fade" id="grocery_modal" tabindex="-1" role="dialog" aria-labelledby="groceryLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="registerLabel"><a class="logo">Your Grocery List</a></h4>
+      </div>
+     
+	<ul id="grocery_list">
+		
+	</ul>      
+    </div>
+  </div>
+</div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -446,9 +444,9 @@
 	<script src="../static/js/bootstrap-switch.js"></script>
 	<script data-cfasync="false" type='text/javascript'>
 		validate_cookie();
-		$("[name='my-checkbox']").bootstrapSwitch();
-		$("[name='my-checkbox']").bootstrapSwitch('onText', 'Yes');
-		$("[name='my-checkbox']").bootstrapSwitch('offText', ':(');
+		$("[name='subscribe-checkbox']").bootstrapSwitch();
+		$("[name='subscribe-checkbox']").bootstrapSwitch('onText', 'Yes');
+		$("[name='subscribe-checkbox']").bootstrapSwitch('offText', ':(');
 	</script>
 	<!-- begin olark code -->
 <script data-cfasync="false" type='text/javascript'>/*<![CDATA[*/window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){

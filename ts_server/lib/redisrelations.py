@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-25 19:43:32
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 23:45:40
+# @Last Modified time: 2014-03-01 21:02:34
 
 import redis
 
@@ -16,10 +16,18 @@ def set_all_categories(all_recipes):
 		cat = str(recipe.category)
 		r.sadd('categories',cat.title())
 		recipe_id = str(recipe.pk)
-		add_to_category(recipe_id,cat)
+		add_to_category(recipe_id,cat,recipe.name)
 
-def add_to_category(recipe_id,category):
+def map_id_to_name(recipe_id,name):
+	r.hset(recipe_id,"name",name)
+
+def add_to_category(recipe_id,category,name):
 	r.sadd(category,recipe_id)
+	map_id_to_name(recipe_id,name)
+
+def get_recipe_name_by_id(recipe_id):
+	return r.hget(recipe_id,"name")
 
 def get_recipe_by_category(category):
 	return list(r.smembers(category))
+

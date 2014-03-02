@@ -3,10 +3,12 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:59:15
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 23:44:31
-from ts_server.utils import datetime_now
+# @Last Modified time: 2014-03-01 15:12:50
 
 from mongoengine import *
+
+import logging
+from ts_server.utils import datetime_now
 
 class Recipe(DynamicDocument):
 	name = StringField(verbose_name='food name', required=True, unique=True)
@@ -20,7 +22,7 @@ class Recipe(DynamicDocument):
 
 	#instruction and ingredients
 	#this is a sorted list so it should always be in this order
-	instruction = SortedListField(StringField())
+	instructions = SortedListField(StringField())
 
 	#the ingredients list will be in the following format NAME:amount 
 	# amount will be in the following format - NUMBER:UNIT
@@ -81,6 +83,7 @@ def add_recipe(name="", description='', category="", instructions = [], servings
 		a = Recipe(name=name, description=description, category=category, instructions=instructions,
 			servings=servings, time_required=time_required, ingredients=ingredients, source=source)
 		a.save()
+		print a.instructions
 		if image: 
 			a.image.put(image,content_type='image/jpeg')
 			a.save()

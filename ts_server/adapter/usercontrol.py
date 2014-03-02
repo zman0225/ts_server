@@ -3,12 +3,12 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 23:53:29
+# @Last Modified time: 2014-03-01 21:49:22
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
 from ts_server.models.plan import *
-from ts_server.lib.redisrelations import get_recipe_by_category
+from ts_server.lib.redisrelations import get_recipe_by_category, get_recipe_name_by_id
 
 import logging
 import redis
@@ -105,7 +105,8 @@ def get_recipe_by_id(rid, recipe_obj=None):
 		re = recipe_obj if recipe_obj is not None else Recipe._by_id(rid) 
 
 		kw = {"name":re.name,"category":re.category,"description":re.description,"time_required":re.time_required,
-			"source":re.source,"servings":re.servings,"instruction":re.instruction, "ingredients":re.ingredients}
+			"source":re.source,"servings":re.servings,"instructions":re.instructions, "ingredients":re.ingredients}
+
 		pickled_object = cPickle.dumps(kw)
 		r.setex(key,pickled_object,240)
 		return kw
@@ -113,7 +114,7 @@ def get_recipe_by_id(rid, recipe_obj=None):
 def new_recipe(name, description='', category="", instructions = [], servings=0, 
 	time_required=0, ingredients={},source="",image=None):
 	add_recipe(name=name, description=description, category=category, instructions = instructions, servings=servings, 
-		time_required=time_required, ingredients=ingredients,source=source,image=image)
+		time_required=time_required, ingredients=ingredients, source=source,image=image)
 
 def login(username,password):
 	return validate_login(username,password)
@@ -131,6 +132,7 @@ def create_plan(uid, acc_obj=None):
 	pref = acc.preference
 	meals = acc.meals
 	plans = []
+	recipe_name = []
 	for i in range(meals):
 
 		ind = random.randint(0,len(pref)-1) if len(pref)>0 else 0
@@ -146,9 +148,13 @@ def create_plan(uid, acc_obj=None):
 				recipes = get_recipe_by_category(pref[ind])
 				counter = 0
 
+		recipe_name.append(get_recipe_name_by_id(recipes[re_ind]))
 		plans.append(recipes[re_ind])
 
-
+	kw = {"recipes":recipe_name,"username":acc.username,"email":acc.email};
+	pickled = cPickle.dumps(kw)
+	r.hset("email",str(acc.pk),pickled)
+	logging.info("menu added to email queue %s"%uid)
 	pref = new_plan(uid,plans)
 	acc.current_plan = pref
 	acc.save()

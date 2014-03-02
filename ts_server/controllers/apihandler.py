@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-02-28 23:45:24
+# @Last Modified time: 2014-03-01 14:43:29
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -49,7 +49,7 @@ class ApiHandler(BaseHandler):
 		# self.finish()
 
 	def validate_cookie(self,*args, **kwargs):
-		if self.validate():
+		if self.validate() and self.session.__contains__('username'):
 			self.write(self.json_packet(retval=True, return_code = 0, packet = {'display_name':self.session['username']}))
 		else:
 			self.write(self.json_packet(retval=False, error = "terrible cookie"))
