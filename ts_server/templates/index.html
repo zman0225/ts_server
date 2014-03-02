@@ -10,16 +10,16 @@
     <title>TimeSavor Template - []</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <link href="{{ static_url("css/bootstrap.css")}}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/color-styles.css" rel="stylesheet">
-    <link href="../static/css/ui-elements.css" rel="stylesheet">
-    <link href="../static/css/custom.css" rel="stylesheet">
-	<link href="../static/css/bootstrap-switch.css" rel="stylesheet">
+    <link href="{{ static_url("css/color-styles.css")}}" rel="stylesheet">
+    <link href="{{ static_url("css/ui-elements.css")}}" rel="stylesheet">
+    <link href="{{ static_url("css/custom.css")}}" rel="stylesheet">
+	<link href="{{ static_url("css/bootstrap-switch.css")}}" rel="stylesheet">
 
 	<!-- Resources -->
-	<link href="../static/css/animate.css" rel="stylesheet">
+	<link href="{{ static_url("css/animate.css")}}" rel="stylesheet">
 	<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
@@ -132,7 +132,7 @@
 					    <a class="btn btn-color" href="#">Main Action</a>
 					  </div> -->
 					  <a href="../templates/index-alt.html" class="alt-index">
-					    <img src="../static/img/browser.png" alt="...">
+					    <img src="{{ static_url("img/browser.png")}}" alt="...">
 					  </a>
 					</div>
 				  </div>
@@ -184,7 +184,7 @@
 			    <div class="row">
 				  <div class="col-md-4 col-sm-12">
 				    <div class="review">
-					  <img src="../static/img/client-1.jpg" alt="...">
+					  <img src="{{static_url("img/client-1.jpg")}}" alt="...">
 					  <div class="review-text">
 					    <h3 class="text-color">Amazing Experience</h3>
 					    <p class="quote text-muted">
@@ -198,7 +198,7 @@
 				  </div>
 				  <div class="col-md-4 col-sm-12">
 				    <div class="review">
-					  <img src="../static/img/client-2.jpg" alt="...">
+					  <img src="{{static_url("img/client-2.jpg")}}" alt="...">
 					  <div class="review-text">
 					    <h3 class="text-color">Excellent Work!</h3>
 					    <p class="quote text-muted">
@@ -212,7 +212,7 @@
 				  </div>
 				  <div class="col-md-4 col-sm-12">
 				    <div class="review">
-					  <img src="../static/img/client-3.jpg" alt="...">
+					  <img src="{{static_url("img/client-3.jpg")}}" alt="...">
 					  <div class="review-text">
 					    <h3 class="text-color">I Simply Love It</h3>
 					    <p class="quote text-muted">
@@ -437,11 +437,11 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
-    <script src="../static/js/app.js"></script>
-    <script src="../static/js/custom.js"></script>
-	<script src="../static/js/scrolltopcontrol.js"></script>
-	<script src="../static/js/bootstrap-switch.js"></script>
+    <script src="{{ static_url("js/bootstrap.min.js")}}"></script>
+    <script src="{{ static_url("js/app.js")}}"></script>
+    <script src="{{ static_url("js/custom.js")}}"></script>
+	<script src="{{ static_url("js/scrolltopcontrol.js")}}"></script>
+	<script src="{{ static_url("js/bootstrap-switch.js")}}"></script>
 	<script data-cfasync="false" type='text/javascript'>
 		validate_cookie();
 		$("[name='subscribe-checkbox']").bootstrapSwitch();
