@@ -2,14 +2,14 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-02 00:54:58
+* @Last Modified time: 2014-03-02 23:56:49
 */
 
 // regex yumminess
 var username = "";
 var emailRegex = /^(([^<>()[\]\\.,;:!\s@\"]+(\.[^<>()[\]\\.,;:!\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-var usernameRegex = /^[a-z0-9_-]{5,16}$/; 
-var passwordRegex = /^[a-z0-9_-]{5,16}$/; 
+var usernameRegex = /^[A-Za-z0-9_-]{5,10}$/; 
+var passwordRegex = /^[A-Za-z0-9!@#$%^&*()_]{6,15}$/;
 var ageRegex = /^(1[3-9]|[2-9][0-9])$/;
 
 var username_valid = false;
@@ -38,6 +38,7 @@ clear_planner = function(){
 	$("#recipe_picture").empty();
 	$("#days").empty();
 	$('#planner-table').empty();
+	$('#recipe-carousel').empty();
 }
 
 isInputsValid = function(){
@@ -229,6 +230,10 @@ get_image = function(recipe_name){
 	return img;
 }
 
+scroll_clicked = function(){
+	console.log(($this));
+}
+
 add_recipes_to_plan = function(data){
 	var ctr = 1;
 	$.each( data, function( index, value ){
@@ -255,21 +260,40 @@ add_recipes_to_plan = function(data){
 		name.text(value['name']);
 
 		// will add recipe to the carousel 
-		var recipe_li = $('<div style="overflow:scroll;height:500px;" class="item"></div>')
-
-		recipe_li.append(name.clone());
-		recipe_li.append('<hr>');
+		var master_div = $('<div class="item" style="height:500px;"></div>');
+		var scroll_container = $('<div data-spy="scroll" data-target="#navbar'+String(ctr)+'" style="height: 100%;overflow-y: scroll;padding-top:12%;"></div>');
+		var instruction_div = $('<div></div>');
+		var pic_div = $('<div style="margin-left:30px;" align="center" "></div>'); pic_div.attr('id',String(ctr)+"pic");
+		var ingr_div = $('<div style="margin-left:30px;"></div>'); ingr_div.attr('id',String(ctr)+"ingr");
+		var instr_div = $('<div></div>'); 
+		instr_div.attr('id',String(ctr)+"instr");
 		var clone_i = a.clone();
 		clone_i.attr('height','400');
 		clone_i.attr('width','400');
-		recipe_li.append(clone_i);
-		recipe_li.append('<hr>');
-		recipe_li.append(ul);
-		recipe_li.append('<hr>');
-		recipe_li.append(instr_ol);
-
-
-		$('#recipe-carousel').append(recipe_li);
+		master_div.append('\
+			<nav id="navbar'+String(ctr)+'" class="navbar navbar-default navbar-fixed-top" role="navigation">\
+				<div class="container-fluid">\
+					<div class="navbar-header">\
+			          <a class="navbar-brand" href="#'+String(ctr)+"pic"+'"">'+name.clone().html()+'</a>\
+		         	</div>\
+	        	</div>\
+	        </nav>');
+		pic_div.append(clone_i);
+		scroll_container.append(pic_div);
+		instruction_div.append('<hr>');
+		var info = $('<h4>Scroll down for more</h4>');
+		scroll_container.append(info);
+		ingr_div.append(ul);
+		instruction_div.append(ingr_div);
+		instruction_div.append('<hr>');
+		instr_div.append(instr_ol);
+		instruction_div.append(instr_div);
+		scroll_container.append(instruction_div)
+		master_div.append(scroll_container);
+		scroll_container.scroll(function(){
+			info.hide();
+		});
+		$('#recipe-carousel').append(master_div);
 
 		//
 		var div = $('<div id="recipe_div" style="height: 450px" ></div>').data("idx", ctr-1);
@@ -466,6 +490,11 @@ AjaxRequest = function(dataPacket,callback)
 	    
 	});
 }
+interested = function(){
+	$("html, body").animate({ scrollTop: 0 }, "slow", function(){
+		$('#register').modal('show');
+	});
+}
 
 register_callback = function(response){
 	if (response["return"]==true){
@@ -473,6 +502,7 @@ register_callback = function(response){
     		$('#register').modal('hide');
 	    	validate(response);
 	    	clearAllInputs();
+	    	$('#preferencestab').trigger('click');
 	    }else{
 	    	$('#register_warning').text(response["error"]);
         	$("#register_warning").removeClass("hidden");
@@ -570,6 +600,23 @@ $( "#create_account" ).on("click",
         
     }
 );
+
+$('#username').tooltip({ /*or use any other selector, class, ID*/
+    placement: "top",
+    trigger: "focus"
+});
+$('#email').tooltip({ /*or use any other selector, class, ID*/
+    placement: "top",
+    trigger: "focus"
+});
+$('#user_age').tooltip({ /*or use any other selector, class, ID*/
+    placement: "top",
+    trigger: "focus"
+});
+$('#password').tooltip({ /*or use any other selector, class, ID*/
+    placement: "top",
+    trigger: "focus"
+});
 
 $("#sign_in").on("click",
  	function() {
