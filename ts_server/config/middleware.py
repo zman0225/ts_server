@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:50:08
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-03 10:19:55
+# @Last Modified time: 2014-03-03 10:30:56
 # import pdb;pdb.set_trace()
 import tornado.web
 import os.path
@@ -40,8 +40,7 @@ class Application(tornado.web.Application):
             template_path=os.path.join(os.path.dirname(__file__), "../templates"),
             static_path=os.path.join(os.path.dirname(__file__), "../static"),
             xsrf_cookies=False,
-            debug=True,
-            xheaders=True
+            debug=True
 			)
 		
 		tornado.web.Application.__init__(self,handlers,**settings)

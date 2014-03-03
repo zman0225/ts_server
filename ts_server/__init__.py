@@ -3,13 +3,14 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:46:18
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-01 12:51:35
+# @Last Modified time: 2014-03-03 10:32:34
 
 
 import logging
 import tornado.options
 import tornado.ioloop
 import tornado.options
+import tornado.httpserver
 
 from ts_server.models.recipe import *
 from lib.redisrelations import set_all_categories
@@ -27,7 +28,9 @@ def main():
 	app=Application()
 
 	load_recipes()
-	app.listen(options.port)
+	# app.listen(options.port)
+	http_server = tornado.httpserver.HTTPServer(app, xheaders=True)
+	http_server.listen(options.port)
 	tornado.ioloop.IOLoop.instance().start()
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-01 14:43:29
+# @Last Modified time: 2014-03-03 10:33:48
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -13,9 +13,7 @@ import json
 from ts_server.adapter import *
 
 #mixpanel analytics
-from mixpanel import Mixpanel
-
-mp = Mixpanel('96985230011fa4df100eeb76e01b969e')
+from ts_server.lib.analytics import mp
 
 #format of a request - {'command',{PACKET}}, authentication through cookie session storage
 #format of a return - {'return':[T/F], error:[MESSAGE], return_code:[0...n], message:[]}
@@ -81,7 +79,7 @@ class ApiHandler(BaseHandler):
 			
 			self.load_session(account)
 			self.write(self.json_packet(retval=True, return_code = 0, packet = {'display_name':self.session['username']}))
-			# mp.track(self._SESSION_KEY, 'user login')
+			mp.track(self._SESSION_KEY, {'user login':self.request.remote_ip})
 		# self.finish()
 
 	def set_preferences(self,preference,meals):
