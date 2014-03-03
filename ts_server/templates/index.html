@@ -131,9 +131,7 @@
 					  <!-- <div class="text-center actions animated fadeInDown delay2">
 					    <a class="btn btn-color" href="#">Main Action</a>
 					  </div> -->
-					  <a href="../templates/index-alt.html" class="alt-index">
-					    <img src="{{ static_url("img/browser.png")}}" alt="...">
-					  </a>
+					 
 					</div>
 				  </div>
 				</div>
@@ -144,11 +142,12 @@
 			      <div class="col-sm-4">
 					<div class="crp-ft">
 					  <i class="text-color fa fa-gears fa-3x"></i>
-					  <h4>Plan your meals</h4>
+					  <h4>Let us plan your meals</h4>
 					  <p class="text-muted lh">
-					    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id ipsum varius, tincidunt odio nec, placerat enim.
+					    Home cooking, without the planning. <br>
+					    Know what’s for dinner this week in under 30 seconds.  
 					  </p>
-					  <a href="#" class="btn btn-color btn-block hidden btn-xxl">Action</a>
+					  <a onclick="interested();" class="btn btn-color btn-block hidden btn-xxl">That sounds good!</a>
 					</div>
 				  </div>
 			      <div class="col-sm-4">
@@ -156,9 +155,9 @@
 					  <i class="text-color fa fa-arrows-alt fa-3x"></i>
 					  <h4>Automatic Grocery List</h4>
 					  <p class="text-muted lh">
-					    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id ipsum varius, tincidunt odio nec, placerat enim.
+					    Get a list of recipes catered to your preferences.  The grocery list is made for you.  Completely for free.  
 					  </p>
-					  <a href="#" class="btn btn-color btn-block hidden btn-xxl">Action</a>
+					  <a onclick="interested();" class="btn btn-color btn-block hidden btn-xxl">Sign me up!</a>
 					</div>
 				  </div>
 			      <div class="col-sm-4">
@@ -166,9 +165,9 @@
 					  <i class="text-color fa fa-scissors fa-3x"></i>
 					  <h4>Weekly Notifications</h4>
 					  <p class="text-muted lh">
-					    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id ipsum varius, tincidunt odio nec, placerat enim.
+					    Register, click on “preferences”, and never plan again.  
 					  </p>
-					  <a href="#" class="btn btn-color btn-block hidden btn-xxl">Action</a>
+					  <a onclick="interested();" class="btn btn-color btn-block hidden btn-xxl">That's easy!</a>
 					</div>
 				  </div>
 				</div>
@@ -242,7 +241,7 @@
 			  				<h1 align="center" class="planner-title">Your week</h1>
 
 			  				<div  style="position:absolute; position:absolute; top:0; right:0;" class="inline">
-			  				<label style="color: #27ae60 !important;display:inline;" for="subscription_check">Subscribed: </label>
+			  				<label style="color: #27ae60 !important;display:inline;" for="subscription_check">Email me: </label>
 								<input id="subscribe-checkbox" align="center" class="pull-right" name="subscribe-checkbox" type="checkbox" data-off-color="danger" checked data-on-color="success" checked data-size="mini" checked>
 			  				</div>
 
@@ -352,19 +351,20 @@
 				
 				  <div class="form-group">
 				    <label class="control-label" for="username">Username</label>
-					<input type="text" class="form-control" id="username"  onkeyup="ValidateInput(this);" placeholder="Username">
+					<input data-toggle="tooltip" title="Please choose an username between 5-10 characters. Letters and numbers." type="text" class="form-control" id="username"  onkeyup="ValidateInput(this);" placeholder="Username">
+					<!-- <button id="herp" type="button" class="btn btn-default hidden" data-toggle="tooltip" data-placement="right" title="" data-original-title="Tooltip on right"></button> -->
 				  </div>
 				  <div class="form-group">
 				    <label class="control-label" for="email">Email address</label>
-					<input type="text" class="form-control" id="email"  onkeyup="ValidateInput(this);" placeholder="Enter email">
+					<input data-toggle="tooltip" title="Please choose a valid email address" type="text" class="form-control" id="email"  onkeyup="ValidateInput(this);" placeholder="Enter email">
 				  </div>
 				  <div class="form-group">
 				  	<label class="control-label" for="password">Password</label>
-				  	<input type="password" class="form-control" id="password"  onkeyup="ValidateInput(this);" placeholder="Password">
+				  	<input data-toggle="tooltip" title="Please choose a password between 5-16 characters." type="password" class="form-control" id="password"  onkeyup="ValidateInput(this);" placeholder="Password">
 				  </div>
 				  <div class="form-group">
 				    <label class="control-label" for="user_age">Age</label>
-					<input type="text" class="form-control" id="user_age"  onkeyup="ValidateInput(this);" placeholder="your age (e.g. 13-99)">
+					<input data-toggle="tooltip" title="Please input your age(13-99)." type="text" class="form-control" id="user_age"  onkeyup="ValidateInput(this);" placeholder="your age (e.g. 13-99)">
 				  </div>
 				  <div class="form-group">
 				    <label for="user_gender">Gender</label>
@@ -400,9 +400,9 @@
 			  <div id="glr-carousel" class="carousel slide" data-ride="carousel">
 			    <!-- Wrapper for slides -->
 			    <div id="recipe-carousel" class="carousel-inner">
-<!-- 				 <div class="item active">
+				 <div class="item active">
 				    
-				  </div> -->
+				  </div>
 			    </div>
 			    <!-- Controls -->
 			    <a class="carousel-arrow carousel-arrow-prev" href="#glr-carousel" data-slide="prev">
@@ -448,7 +448,7 @@
 		$("[name='subscribe-checkbox']").bootstrapSwitch('onText', 'Yes');
 		$("[name='subscribe-checkbox']").bootstrapSwitch('offText', ':(');
 	</script>
-	<!-- begin olark code -->
+<!-- begin olark code -->
 <script data-cfasync="false" type='text/javascript'>/*<![CDATA[*/window.olark||(function(c){var f=window,d=document,l=f.location.protocol=="https:"?"https:":"http:",z=c.name,r="load";var nt=function(){
 f[z]=function(){
 (a.s=a.s||[]).push(arguments)};var a=f[z]._={
@@ -466,6 +466,6 @@ var t=b.contentWindow[g];t.write(p());t.close()}catch(x){
 b[k]=o+'d.write("'+p().replace(/"/g,String.fromCharCode(92)+'"')+'");d.close();'}a.P(2)};ld()};nt()})({
 loader: "static.olark.com/jsclient/loader0.js",name:"olark",methods:["configure","extend","declare","identify"]});
 /* custom configuration goes here (www.olark.com/documentation) */
-olark.identify('2663-487-10-1185');/*]]>*/</script><noscript><a href="https://www.olark.com/site/2663-487-10-1185/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript>
+olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://www.olark.com/site/1601-149-10-9994/contact" title="Contact us" target="_blank">Questions? Feedback?</a> powered by <a href="http://www.olark.com?welcome" title="Olark live chat software">Olark live chat software</a></noscript>
 <!-- end olark code -->
 </body></html>

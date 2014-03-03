@@ -871,8 +871,11 @@ a.carousel-arrow  {
 }
 a.carousel-arrow:hover,
 a.carousel-arrow:active {
+	visibility: visible;
 	text-decoration: none;
 }
+
+
 a.carousel-arrow-prev {
 	left: 0;
 	right: auto;
@@ -1082,9 +1085,9 @@ a.carousel-arrow-next {
 	width: 100%;
 	margin-top: -50px;
 	margin-bottom: 100px;
-	padding-top: 50px;
+	padding-top: 30px;
 	padding-bottom: 200px;
-	background: url("http://thumbs.dreamstime.com/z/kitchen-background-spoons-food-wooden-vegetables-spices-rolled-spaghetti-wooden-table-35746291.jpg") no-repeat center center;
+	background: url("http://2.s3.envato.com/files/37347572/15032012-ingredients-italian-cooking-23-2.jpg") no-repeat top center;
 	background-size: cover;
 	color: #FFF;
 	border-bottom: 1px solid #eee;

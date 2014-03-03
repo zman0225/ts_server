@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-02 01:03:54
+# @Last Modified time: 2014-03-02 21:10:21
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -78,9 +78,6 @@ def set_subscribed(uid,val):
 	acc = Account._by_id(uid)
 	acc.update(set__subscribed=val)
 	mp.track(uid, 'subscribed' if val else 'unsubscribed')
-	mp.people_append(uid, {
-	    'subscribed' : str(val)
-	})
 	logging.info("sub is now "+str(acc.subscribed))
 
 def get_all_categories():
@@ -157,10 +154,11 @@ def create_plan(uid, acc_obj=None):
 	plans = []
 	recipe_name = []
 	for i in range(meals):
-
 		ind = random.randint(0,len(pref)-1) if len(pref)>0 else 0
 		recipes = get_recipe_by_category(pref[ind])
 
+		if meals > len(recipes) and i==len(recipes)-1:
+			break
 		re_ind = random.randint(0,len(recipes)-1) if len(pref)>0 else 0
 		counter = 0
 		while recipes[re_ind] in plans:
@@ -173,6 +171,7 @@ def create_plan(uid, acc_obj=None):
 
 		recipe_name.append(get_recipe_name_by_id(recipes[re_ind]))
 		plans.append(recipes[re_ind])
+
 
 	kw = {"recipes":recipe_name,"username":acc.username,"email":acc.email};
 	pickled = cPickle.dumps(kw)

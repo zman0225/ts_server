@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:17:33
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-02 01:01:02
+# @Last Modified time: 2014-03-02 20:51:58
 
 from ts_server.lib.redissession import Session
 from ts_server.lib.authentication import *
@@ -31,7 +31,7 @@ class BaseHandler(tornado.web.RequestHandler):
 			logging.info("VALID")
 			logging.info('session is %s'%sessionid)
 			self._SESSION_KEY = sessionid
-			return True
+			return self.session!=None
 		else:
 			self.clear_all_cookies()
 			logging.info("NOT VALID")

@@ -19,7 +19,7 @@ class EmailWorker(threading.Thread):
 
 	def run(self):
 		logging.info("EmailWorker [ID]:%s"%str(self.threadID))
-		while not self.stopped.wait(180):
+		while not self.stopped.wait(3600):
 			kw = self.r.hgetall("email")
 			self.r.delete("email")
 			logging.info("Sending emails to %d recipients"%len(kw))
@@ -33,8 +33,7 @@ class EmailWorker(threading.Thread):
 			logging.info("email send to %s"%data['email'])
 
 	def template(self,recipes,username):
-		s = str(recipes)[1:-1]
-		s.replace("'",'')
+		s = str(recipes)[1:-1].replace("'","")
 		return """Dear %s,\n\tYour menu looks delicious. This week, you are having: \n\n%s.\n\
 		Want a different menu? visit: http://timesavorapp.com/\n\
 		If you have any questions or concern, please don't hesitate to mail us back.\n\
@@ -47,6 +46,6 @@ class EmailWorker(threading.Thread):
 			auth=("api", "key-9y7c3fgcidcnqzopu-psjg0nq3wbg7h3"),
 			data={"from": "Chef Sal <chefsal@mg.timesavorapp.com>",
 				"to": [email],
-				"subject": "Hello, %s - your meals this week"%name,
+				"subject": "Hello, %s - your updated meals this week"%name,
 				"text": msg})
 

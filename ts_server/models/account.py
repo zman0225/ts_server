@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-02 00:46:11
+# @Last Modified time: 2014-03-02 21:43:59
 
 from ts_server.lib.authentication import constant_time_compare
 from mongoengine import *
@@ -19,7 +19,7 @@ class Account(Document):
 	password = StringField(max_length=200, required=True)
 	first_name = StringField(max_length=30, verbose_name='first name')
 	last_name = StringField(max_length=30, verbose_name='last name')
-	email = StringField(max_length=50, verbose_name='email address',unique=True)
+	email = StringField(max_length=60, verbose_name='email address',unique=True)
 	date_joined = DateTimeField(default=datetime_now,verbose_name='date joined')
 	age = IntField()
 	gender = StringField(max_length=30)
