@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-03 10:33:48
+# @Last Modified time: 2014-03-03 10:40:58
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -79,7 +79,7 @@ class ApiHandler(BaseHandler):
 			
 			self.load_session(account)
 			self.write(self.json_packet(retval=True, return_code = 0, packet = {'display_name':self.session['username']}))
-			mp.track(self._SESSION_KEY, {'user login':self.request.remote_ip})
+			mp.track(self._SESSION_KEY, 'user login')
 		# self.finish()
 
 	def set_preferences(self,preference,meals):
