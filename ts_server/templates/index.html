@@ -101,8 +101,8 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 	            <a id="sign-in" class="dropdown-toggle" href="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
 	            <div class="dropdown-menu" style="padding: 15px; padding-bottom: 10px;">
 	                  <div style="top-margin:100px;"class="alert alert-danger fade in hidden" id="login_warning"></div>
-					  <input id="user_username" style="margin-bottom: 15px;" type="text" placeholder="username or email" size="30" />
-					  <input id="user_password" style="margin-bottom: 15px;" type="password" placeholder="password" size="30" />
+					  <input id="user_username" autocomplete="off" style="margin-bottom: 15px;" type="text" placeholder="username or email" size="30" />
+					  <input id="user_password" autocomplete="off" style="margin-bottom: 15px;" type="password" placeholder="password" size="30" />
 
 					  <input class="btn btn-primary" style="clear: left; width: 100%; height: 28px; font-size: 13px;" type="button" id="sign_in" value="Sign In" />
 	            </div>
@@ -371,35 +371,35 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 				
 				  <div class="form-group">
 				    <label class="control-label" for="username">Username</label>
-					<input data-toggle="tooltip" title="Please choose an username between 5-10 characters. Letters and numbers." type="text" class="form-control" id="username"  onkeyup="ValidateInput(this);" placeholder="Username">
+					<input autocomplete="off"  data-toggle="tooltip" title="Please choose an username between 5-10 characters. Letters and numbers." type="text" class="form-control" id="username"  onkeyup="ValidateInput(this);" placeholder="Username">
 					<!-- <button id="herp" type="button" class="btn btn-default hidden" data-toggle="tooltip" data-placement="right" title="" data-original-title="Tooltip on right"></button> -->
 				  </div>
 				  <div class="form-group">
 				    <label class="control-label" for="email">Email address</label>
-					<input data-toggle="tooltip" title="Please choose a valid email address" type="text" class="form-control" id="email"  onkeyup="ValidateInput(this);" placeholder="Enter email">
+					<input autocomplete="off" data-toggle="tooltip" title="Please choose a valid email address" type="text" class="form-control" id="email"  onkeyup="ValidateInput(this);" placeholder="Enter email">
 				  </div>
 				  <div class="form-group">
 				  	<label class="control-label" for="password">Password</label>
-				  	<input data-toggle="tooltip" title="Please choose a password between 5-16 characters." type="password" class="form-control" id="password"  onkeyup="ValidateInput(this);" placeholder="Password">
+				  	<input autocomplete="off" data-toggle="tooltip" title="Please choose a password between 5-16 characters." type="password" class="form-control" id="password"  onkeyup="ValidateInput(this);" placeholder="Password">
 				  </div>
 				  <div class="form-group">
 				    <label class="control-label" for="user_age">Age</label>
-					<input data-toggle="tooltip" title="Please input your age(13-99)." type="text" class="form-control" id="user_age"  onkeyup="ValidateInput(this);" placeholder="your age (e.g. 13-99)">
+					<input autocomplete="off" data-toggle="tooltip" title="Please input your age(13-99)." type="text" class="form-control" id="user_age"  onkeyup="ValidateInput(this);" placeholder="your age (e.g. 13-99)">
 				  </div>
 				  <div class="form-group">
 				    <label for="user_gender">Gender</label>
 					<div class="btn-group" id="user_gender" data-toggle="buttons">
 					  <label class="btn btn-primary active">
-					    <input type="radio" name="options" id="female_radio" value="female" checked=""> Female
+					    <input autocomplete="off" type="radio" name="options" id="female_radio" value="female" checked=""> Female
 					  </label>
 					  <label class="btn btn-primary">
-					    <input type="radio" name="options" id="male_radio" value="male"> Male
+					    <input autocomplete="off" type="radio" name="options" id="male_radio" value="male"> Male
 					  </label>
 					</div>
 				  </div>
 				  <div class="checkbox">
 					<label>
-					  <input type="checkbox" id="TOS" value="Accept" onclick="EnableSubmit(this);"> I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+					  <input autocomplete="off" type="checkbox" id="TOS" value="Accept" onclick="EnableSubmit(this);"> I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
 					</label>
 				  </div>
 				  <button id="create_account" class="btn btn-block btn-color btn-xxl" disabled="True">Create an account</button>
@@ -464,6 +464,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 	<script src="{{ static_url("js/bootstrap-switch.js")}}"></script>
 	<script data-cfasync="false" type='text/javascript'>
 		validate_cookie();
+		clearform();
 		$("[name='subscribe-checkbox']").bootstrapSwitch();
 		$("[name='subscribe-checkbox']").bootstrapSwitch('onText', 'Yes');
 		$("[name='subscribe-checkbox']").bootstrapSwitch('offText', ':(');
