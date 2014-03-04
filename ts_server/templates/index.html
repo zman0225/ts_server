@@ -382,7 +382,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 				  </div>
 				  <div class="form-group">
 				  	<label class="control-label" for="password">Password</label>
-				  	<input autocomplete="off" data-toggle="tooltip" title="Please choose a password between 5-16 characters." type="password" class="form-control" id="password"  onkeyup="ValidateInput(this);" placeholder="Password">
+				  	<input autocomplete="off" data-toggle="tooltip" title="Please choose a password between 6-16 characters." type="password" class="form-control" id="password"  onkeyup="ValidateInput(this);" placeholder="Password">
 				  </div>
 				  <div class="form-group">
 				    <label class="control-label" for="user_age">Age</label>
@@ -400,11 +400,12 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 					</div>
 				  </div>
 				  <div class="checkbox">
-					<label>
+					<!-- <label>
 					  <input autocomplete="off" type="checkbox" id="TOS" value="Accept" onclick="EnableSubmit(this);"> I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-					</label>
+					</label> -->
 				  </div>
-				  <button id="create_account" class="btn btn-block btn-color btn-xxl" disabled="True">Create an account</button>
+				  <label for="create_account">You might have some trouble, if you are using Internet Explore 8,9 - please upgrade to IE 10 or switch to Chrome/Safari.</label>
+				  <button id="create_account" data-toggle="tooltip" title="You might have some trouble, you are using Internet Explore 8,9 - please upgrade or switch to Chrome/Safari." class="btn btn-block btn-color btn-xxl" disabled="True">Create an account</button>
 				
 			</div>
       </div>
