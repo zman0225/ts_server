@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-04 12:58:32
+* @Last Modified time: 2014-03-04 13:06:28
 */
 
 // regex yumminess
@@ -409,6 +409,12 @@ enableCreateAccount = function(){
     	console.log("invalid");
         sbmt.prop('disabled', true);
     }
+}
+
+clearform = function(){
+	$("input[type=text]").val("");
+	$("input[type=password]").val("");
+	$('#TOS').prop('checked', false);
 }
 
 // validate the inputs
