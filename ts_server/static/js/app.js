@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-02 23:56:49
+* @Last Modified time: 2014-03-04 10:00:00
 */
 
 // regex yumminess
@@ -543,8 +543,12 @@ validate = function(response){
 	$('#planner').removeClass('hidden');
 	$('#preferencestab').removeClass('hidden');
 	$('#plannertab').removeClass('hidden');
+	$('#front_create').prop('onclick',null);
+	$('#front_create').on('click',function(){$('#preferencestab').trigger('click');});
 	load_preference();
 }
+
+
 
 unvalidate = function(){
 	$('#sign-in').removeClass('hidden');
@@ -555,6 +559,7 @@ unvalidate = function(){
 	$('#preferencestab').addClass('hidden');
 	$('#plannertab').addClass('hidden');
 	$('#display_name').text("");
+	$('#front_create').attr('onclick',"interested();");
 }
 
 validate_cookie = function(){
@@ -580,7 +585,10 @@ $('#logout').on("click",
  	function() {
  		clear_cookies();
  		unvalidate();
- 		$('#myTab a[href="#home"]').tab('show')
+ 		$('#myTab a[href="#home"]').tab('show');
+ 		$('#front_create').off('click');
+ 		$('#front_create').attr('onclick',"interested();");
+
     }
 );
 

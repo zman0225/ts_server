@@ -1083,11 +1083,11 @@ a.carousel-arrow-next {
 
 .crp-showcase {
 	width: 100%;
-	margin-top: -50px;
+	margin-top: -30px;
 	margin-bottom: 100px;
 	padding-top: 30px;
 	padding-bottom: 200px;
-	background: url("http://2.s3.envato.com/files/37347572/15032012-ingredients-italian-cooking-23-2.jpg") no-repeat top center;
+	background: url("/static/img/prep.jpg") no-repeat top center;
 	background-size: cover;
 	color: #FFF;
 	border-bottom: 1px solid #eee;

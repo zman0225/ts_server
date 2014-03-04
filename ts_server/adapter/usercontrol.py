@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-03 10:43:35
+# @Last Modified time: 2014-03-03 19:37:00
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -78,7 +78,7 @@ def set_subscribed(uid,val):
 	acc = Account._by_id(uid)
 	acc.update(set__subscribed=val)
 	mp.track(uid, 'subscribed' if val else 'unsubscribed')
-	logging.info("sub is now "+str(acc.subscribed))
+	logging.info("sub is now "+str(val))
 
 def get_all_categories():
 	return list(r.smembers('categories'))
