@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-04 13:06:28
+* @Last Modified time: 2014-03-04 13:26:29
 */
 
 // regex yumminess
@@ -400,7 +400,8 @@ enableCreateAccount = function(){
 	var sbmt = $('#create_account');
 	// var sbmt = document.getElementById("create_account");
 	// console.log(isInputsValid());
-	if(isInputsValid()&&($('#TOS:checked').length>0)&&(typeof($('input[type="radio"]:checked').val())!= "undefined")){
+	// &&($('#TOS:checked').length>0)&&(typeof($('input[type="radio"]:checked').val())!= "undefined")
+	if(isInputsValid()){
 		console.log("valid");
 		sbmt.prop('disabled', false);
     }
