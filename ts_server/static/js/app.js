@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-04 10:00:00
+* @Last Modified time: 2014-03-04 12:03:54
 */
 
 // regex yumminess
@@ -397,15 +397,16 @@ $('#generate_grocery').on('click',function(){
 });
 
 enableCreateAccount = function(){
-	var sbmt = document.getElementById("create_account");
+	var sbmt = $('#create_account');
+	// var sbmt = document.getElementById("create_account");
 	// console.log(isInputsValid());
 	if(isInputsValid()&&($('#TOS:checked').length>0)&&(typeof($('input[type="radio"]:checked').val())!= "undefined")){
 		console.log("valid");
-		sbmt.disabled = false;
+		sbmt.prop('disabled', false);
     }
     else
     {
-        sbmt.disabled = true;
+        sbmt.prop('disabled', true);
     }
 }
 
