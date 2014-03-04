@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-04 12:03:54
+* @Last Modified time: 2014-03-04 12:58:32
 */
 
 // regex yumminess
@@ -406,12 +406,14 @@ enableCreateAccount = function(){
     }
     else
     {
+    	console.log("invalid");
         sbmt.prop('disabled', true);
     }
 }
 
 // validate the inputs
 ValidateInput = function(val){
+	console.log("testing");
 	switch($(val).attr('id')){
 		case 'username':
 			username_valid = GroupFormValidator(usernameRegex,val);
