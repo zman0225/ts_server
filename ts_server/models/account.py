@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-06 14:27:31
+# @Last Modified time: 2014-03-06 18:48:43
 
 from ts_server.lib.authentication import constant_time_compare
 from mongoengine import *
@@ -49,7 +49,7 @@ class Account(Document):
 
 	@classmethod
 	def _by_username(cls,username):
-		a = cls.objects(username=username)
+		a = cls.objects(username__iexact=username)
 		if a.count()==1:
 			return a[0]
 		else:
@@ -57,7 +57,7 @@ class Account(Document):
 
 	@classmethod
 	def _by_email(cls,email):
-		a = cls.objects(email=email)
+		a = cls.objects(email__iexact=email)
 		if a.count()==1:
 			return a[0]
 		else:
@@ -89,7 +89,7 @@ def validate_login(username, password):
 	try:
 		a = None
 		if '@' in username:
-			a = Account._by_email(username.lower())
+			a = Account._by_email(username)
 		else:
 			a = Account._by_username(username)
 		if validate_password(a, password):
