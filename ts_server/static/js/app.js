@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-04 13:26:29
+* @Last Modified time: 2014-03-06 15:04:30
 */
 
 // regex yumminess
@@ -632,6 +632,16 @@ $('#user_age').tooltip({ /*or use any other selector, class, ID*/
     trigger: "focus"
 });
 $('#password').tooltip({ /*or use any other selector, class, ID*/
+    placement: "top",
+    trigger: "focus"
+});
+
+$('#user_username').tooltip({ /*or use any other selector, class, ID*/
+    placement: "top",
+    trigger: "focus"
+});
+
+$('#user_password').tooltip({ /*or use any other selector, class, ID*/
     placement: "top",
     trigger: "focus"
 });

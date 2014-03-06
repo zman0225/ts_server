@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-06 00:29:39
+# @Last Modified time: 2014-03-06 14:27:31
 
 from ts_server.lib.authentication import constant_time_compare
 from mongoengine import *
@@ -82,8 +82,7 @@ def bcrypt_password(password):
     return bcrypt.hashpw(password, salt)
 
 def change_password(account, newpassword):
-    account.password = bcrypt_password(newpassword)
-    account.update()
+    account.update(set__password= bcrypt_password(newpassword))
     return True
 
 def validate_login(username, password):
