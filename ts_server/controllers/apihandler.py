@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-03 10:40:58
+# @Last Modified time: 2014-03-06 08:53:55
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -136,9 +136,7 @@ class ApiHandler(BaseHandler):
 	def set_subscribed(self,values):
 		if not self.validate():
 			return self.validate_cookie()
-
-		value = True if values=='true' else False
-		set_subscribed(self.session['AID'],value)
+		set_subscribed(self.session['AID'],values)
 		# self.finish()
 
 
