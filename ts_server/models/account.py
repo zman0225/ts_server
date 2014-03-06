@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:53:49
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-02 21:43:59
+# @Last Modified time: 2014-03-06 00:29:39
 
 from ts_server.lib.authentication import constant_time_compare
 from mongoengine import *
@@ -90,7 +90,7 @@ def validate_login(username, password):
 	try:
 		a = None
 		if '@' in username:
-			a = Account._by_email(username)
+			a = Account._by_email(username.lower())
 		else:
 			a = Account._by_username(username)
 		if validate_password(a, password):

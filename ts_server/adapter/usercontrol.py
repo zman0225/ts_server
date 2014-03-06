@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-03 19:37:00
+# @Last Modified time: 2014-03-06 00:34:42
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -43,7 +43,7 @@ def new_ts_account(username, password, ip_addr, gender, age, email):
 	if acc:
 		acc.gender = gender;
 		acc.age = int(age)
-		acc.email = email
+		acc.email = email.lower()
 		acc.save()
 		mp.people_set(str(acc.pk), {
 		    '$username'    : username,
