@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-07 00:09:21
+* @Last Modified time: 2014-03-07 12:49:16
 */
 
 // regex yumminess
@@ -247,7 +247,7 @@ add_recipes_to_plan = function(data){
 
 		var instr_ol = $('<ol style="margin: 0 auto;"></ol>');
 
-		for (var i = 0; i < value['instructions'].length; i++){
+		for (var i = value['instructions'].length-1; i >-1; i--){
 			var lii = $('<li style="margin:0!important; padding:0!important;"></li>');
 		    lii.append($('<p></p>').text(value['instructions'][i]));
 		    instr_ol.append(lii);
