@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-07 12:49:16
+* @Last Modified time: 2014-03-07 12:56:37
 */
 
 // regex yumminess
@@ -244,7 +244,6 @@ add_recipes_to_plan = function(data){
 		    li.append($('<p></p>').text(k + ' - ' + v));
 		    ul.append(li);
 		});
-
 		var instr_ol = $('<ol style="margin: 0 auto;"></ol>');
 
 		for (var i = value['instructions'].length-1; i >-1; i--){
@@ -257,6 +256,8 @@ add_recipes_to_plan = function(data){
 		var day = "Day "+String(ctr);
 		var a = get_image(value['name']);
 		var name = $('<h4 style="color: #27ae60 !important;" ></h4>');
+		var time = $('<h5 style="color: #27ae60 !important;" ></h5>');
+		time.text("Total time required: "+value['time_required']['total time']);
 		name.text(value['name']);
 
 		// will add recipe to the carousel 
@@ -316,6 +317,7 @@ add_recipes_to_plan = function(data){
 		a.appendTo(div);
 		ctr++;
 		name.appendTo(div);
+		time.appendTo(div);
 		descrip.appendTo(div);
 
 		div.appendTo(li);
