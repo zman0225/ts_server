@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-06 15:04:30
+* @Last Modified time: 2014-03-07 00:09:21
 */
 
 // regex yumminess
@@ -366,6 +366,7 @@ $('#preferencestab').on('click',
         var jsonPacket = JSON.stringify(packet);
         AjaxRequest(jsonPacket,preference_callback);
 });
+
 
 $('#generate_menu').on('click',function(){
 	var packet = {};
