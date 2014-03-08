@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-06 18:48:34
+# @Last Modified time: 2014-03-08 11:59:52
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -52,6 +52,7 @@ def new_ts_account(username, password, ip_addr, gender, age, email):
 		    '$ip'		:ip_addr	
 		})
 		mp.track(str(acc.pk), 'register')
+		mp.alias(str(acc.pk), ip_addr)
 		logging.info("account %s created!"%(str(acc.pk)))
 		return acc
 	else:
