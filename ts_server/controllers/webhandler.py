@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-23 15:23:56
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-04 17:10:30
+# @Last Modified time: 2014-03-09 00:25:00
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -11,7 +11,6 @@ from tornado.escape import url_escape
 import logging
 import json
 from ts_server.adapter import *
-from ts_server.lib.analytics import *
 from ts_server.lib.analytics import mp
 #format of a request - {'command',{PACKET}}, authentication through cookie session storage
 #format of a return - {'return':[T/F], error:[MESSAGE], return_code:[0...n], message:[]}
