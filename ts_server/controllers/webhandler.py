@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-23 15:23:56
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-09 00:25:00
+# @Last Modified time: 2014-03-10 10:17:19
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -33,5 +33,5 @@ class ImageHandler(BaseHandler):
 		self.set_header('Content-type', ct)
 		self.set_header('Content-length', len(p))
 		self.write(p)
-		# self.finish()
 
+		
