@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-07 12:56:37
+* @Last Modified time: 2014-03-13 00:23:06
 */
 
 // regex yumminess
@@ -23,6 +23,12 @@ var meals = 0;
 var menu_plan = null;
 var needNew= false;
 var subscribed = null;
+
+String.prototype.trunc = String.prototype.trunc ||
+      function(n){
+          return this.length>n ? this.substr(0,n-1)+'&hellip;' : this;
+      };
+
 // create account submit button
 EnableSubmit = function(val)
 {
@@ -253,13 +259,12 @@ add_recipes_to_plan = function(data){
 		    console.log("asdas");
 		}
 
-		var day = "Day "+String(ctr);
 		var a = get_image(value['name']);
 		var name = $('<h4 style="color: #27ae60 !important;" ></h4>');
-		var time = $('<h5 style="color: #27ae60 !important;" ></h5>');
-		time.text("Total time required: "+value['time_required']['total time']);
-		name.text(value['name']);
+		var total_time = parseInt(value['time_required']['prep time'])+parseInt(value['time_required']['cooking time']);
+				console.log(total_time);
 
+		name.text(value['name']);
 		// will add recipe to the carousel 
 		var master_div = $('<div class="item" style="height:500px;"></div>');
 		var scroll_container = $('<div data-spy="scroll" data-target="#navbar'+String(ctr)+'" style="height: 100%;overflow-y: scroll;padding-top:12%;"></div>');
@@ -297,30 +302,41 @@ add_recipes_to_plan = function(data){
 		$('#recipe-carousel').append(master_div);
 
 		//
-		var div = $('<div id="recipe_div" style="height: 450px" ></div>').data("idx", ctr-1);
-		bind_selector(div);
+		// var div = $('<div id="recipe_div" style="height: 450px" ></div>').data("idx", ctr-1);
+		
 		
 
+		var description = $('<span style="color: #27ae60 !important; overflow: hidden;" class="glr-text"></span>');
+		var title = $('<span class="glr-title"></span>');
+		title.text(value['name']);
+		title.appendTo(description);
+		description.append(value['description'].trunc(100));
 		var descrip = $('<p style="color: #27ae60 !important;" align="top"></p>');
 		descrip.text(value['description']);
-		var li = $('<li style="display: table-cell; overflow: hidden; position: relative; width: 150px; "></li>');
-		var li1 = $('<h3 width="130px;"></h3>');
-		var temp = $('<p style="color: #27ae60 !important;" ></p>');
-		temp.text(day);
-		// li1.html = temp;
-		temp.appendTo(li1);
+		var li = $('<li id="recipe_card" class="col-sm-4 col-md-3" style="height: 300px; overflow:auto;padding-left:10px;"></li>').data("idx", ctr-1);;
 
-		li1.appendTo(div);
-		div.append('<hr>');
-		a.attr('height','130px');
-		a.attr('width','130px');
-		a.appendTo(div);
+		// a.addClass('img-responsive');
+		a.attr('height','200px');
+		a.attr('width','200px');
+		// a.appendTo(div);
+		var time_badge = $('<span class="badge badge-success"></span>');
+		time_badge.append(value['time_required']['total time']);
+		var thumbnail = $('<span class="glr-thumbnail relative"></span>');
+		var image_label = $('<div id="img_label"></div>');
+		image_label.text(value['name'].trunc(30));
+		a.appendTo(thumbnail);
+		// image_label.appendTo(thumbnail);
+		time_badge.text(String(total_time)+" minutes");
+		time_badge.appendTo(thumbnail);
+		thumbnail.appendTo(li);
+		bind_selector(li);
 		ctr++;
-		name.appendTo(div);
-		time.appendTo(div);
-		descrip.appendTo(div);
+		// name.appendTo(div);
+		// time.appendTo(li);
+		// descrip.appendTo(div);
 
-		div.appendTo(li);
+		// div.appendTo(li);
+		description.appendTo(li);
 		li.appendTo('#planner-table');
 	});
 }

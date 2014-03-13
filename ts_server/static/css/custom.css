@@ -22,6 +22,22 @@ body {
 height:928px;
 }
 
+#recipe_card{
+	
+	/*border-color:#27ae60!important;*/
+	border:2px solid;
+	border-radius:25px;
+}
+img+span.badge {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+}
+
+li{
+	cursor: pointer;
+}
+
 #navcontainer ul
 {
 margin-top: -10px;
@@ -42,7 +58,7 @@ background-color: #036;*/
 #sign-up{
 	cursor: pointer;
 }
-#navcontainer ul li div:hover
+#planner-table li:hover
 {
 	cursor: pointer;
 	color: #fff;
