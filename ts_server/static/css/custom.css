@@ -28,11 +28,32 @@ height:928px;
 	border:2px solid;
 	border-radius:25px;
 }
+.recipe_container:hover{
+	background-color: #369;
+}
 
 .recipe_container:hover
+.badge
 {
 	background-color: #369;
 }
+
+.relative:hover > #glyphchange
+{
+	display: block;
+	background-color: #369;
+}
+
+#glyphchange{
+	display: none;
+	position: absolute;
+    top: 0.75em;
+    right: 1.75em;
+    background-color: gray;
+	border-radius:5px;
+	font-size: 15pt;
+}
+
 
 img+span.badge {
     position: absolute;
@@ -1107,9 +1128,10 @@ a.carousel-arrow-next {
 	width: 100%;
 	margin-top: -30px;
 	margin-bottom: 100px;
-	padding-top: 30px;
+	padding-top: 0px;
 	padding-bottom: 200px;
 	background: url("/static/img/prep.jpg") no-repeat top center;
+	background-attachment: fixed;
 	background-size: cover;
 	color: #FFF;
 	border-bottom: 1px solid #eee;

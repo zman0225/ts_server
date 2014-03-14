@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-08 16:43:22
+# @Last Modified time: 2014-03-14 16:06:54
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -146,6 +146,33 @@ def get_latest_plan(uid):
 		mp.track(uid, 'requesting latest plan')
 		return plan
 	return create_plan(uid=uid,acc_obj=acc)
+
+def exchange_recipe(uid, recipe):
+	mp.track(uid, 'does not like '+str(recipe)+' exchanging')
+	acc = Account._by_id(uid)
+	re = Recipe._by_name(recipe)
+	recipes = get_recipe_by_category(re.category)
+	ind = random.randint(0,len(recipes)-1)
+	curr_plan = acc.current_plan
+	menu_list = curr_plan.menu_plan
+
+	exchange = recipes[ind]
+
+	while exchange in menu_list or exchange == str(re.pk):
+		if len(recipes)<2:
+			break
+		ind = random.randint(0,len(recipes)-1)
+		exchange = recipes[ind]
+
+	
+
+	re_ind = menu_list.index(str(re.pk))
+	menu_list[re_ind] = exchange
+	print "new ",exchange, "old",re.pk
+	curr_plan.menu_plan = menu_list
+	curr_plan.save()
+	acc.current_plan = curr_plan
+	return get_recipe_by_id(rid=exchange)
 
 def create_plan(uid, acc_obj=None):
 	mp.track(uid, 'generating new plan')

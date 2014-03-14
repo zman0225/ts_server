@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-13 22:20:23
+* @Last Modified time: 2014-03-14 16:11:43
 */
 $(document).ready(function() {
 
@@ -38,6 +38,7 @@ app.RecipeList = Backbone.Collection.extend({
 
 app.recipeList = new app.RecipeList();
 
+
 //barebone views
 app.RecipeView = Backbone.View.extend({
   // el - stands for element. Every view has a element associate in with HTML 
@@ -48,6 +49,7 @@ app.RecipeView = Backbone.View.extend({
   template:_.template($('#recipe-template').html()),
   // It's the first function called when this view it's instantiated.
   initialize: function(){
+  	this.model.on('change', this.render, this);
 
     // this.render();
   },
@@ -55,16 +57,38 @@ app.RecipeView = Backbone.View.extend({
   //       to push content. Like the Hello World in this case.
   render: function(){
     this.$el.html(this.template(this.model.toJSON()));
+    console.log("render new");
     return this;
   },
   events: {
-        'click .recipe_container': 'showModal'      },
+        'click #glyphchange':'changeRecipe',  
+        'click .recipe_container': 'showModal'    },
   showModal: function(){
-  	
     var modalView = new Modal({model:this.model});
- console.log(this.model);
     $('.app').html(modalView.render().el);
   },
+   changeRecipe: function(event){
+   		event.stopImmediatePropagation();
+   		var packet = {};
+		var placeholder = {};
+		placeholder.recipe=this.model.get('name');
+        packet.get_new_from_category = placeholder;
+        var jsonPacket = JSON.stringify(packet);
+        AjaxRequest(jsonPacket,this.success, this);
+        console.log(this.model);
+   },
+  success:function(response, context){
+   		if (response["return"]==true){
+   			new_recipe = response["packet"]["new_recipe"];
+   			// console.log(new_recipe['name']);
+   			process_recipe(new_recipe);
+   			// console.log(context);
+   			context.model.set(new_recipe);
+   			context.render();
+   			// this.$el.addClass('exchanged');
+   		}
+   }
+   
 });
 
 app.RecipeListView = Backbone.View.extend({
@@ -74,32 +98,32 @@ app.RecipeListView = Backbone.View.extend({
   
   initialize: function () {
         app.recipeList.on('add', this.addOne, this);
+        app.recipeList.on('reset', this.emptyList, this);
         // app.recipeList.on('reset', this.addAll, this);
         app.recipeList.fetch(); // Loads list from local storage
    },
+   emptyList:function(){
+   	$('#test-table').empty();
+   },
    addOne: function(todo){
         var view = new app.RecipeView({model: todo});
-        console.log("asd"+todo);
         $('#test-table').append(view.render().el);
       },
-  addAll: function(){
-    this.$('#test-table').html(''); // clean the todo list
-    _.each(app.recipeList.get(), this.addOne);
-    
-  },
-  // $el - it's a cached jQuery object (el), in which you can use jQuery functions 
-  //       to push content. Like the Hello World in this case.
   render: function(){
     this.$el.html(this.template(this.model.toJSON()));
   }
 });
 
 // Create a modal view class
-      var Modal = Backbone.Modal.extend({
-        template: _.template($('#modal-template').html()),
-        cancelEl: '.bbm-button'
-      });
+// this is for the recipe modal
+var Modal = Backbone.Modal.extend({
+template: _.template($('#modal-template').html()),
+cancelEl: '.bbm-button'
+});
 
+$('#glyphchange').click(function(event){
+    event.stopImmediatePropagation();
+});
 
 // regex yumminess
 var username = "";
@@ -195,6 +219,26 @@ togglePreference = function(con){
 	console.log("pref is now "+preferences);
 }
 
+AjaxRequest = function(dataPacket,callback,context)
+{
+    request = $.ajax({
+	    url: "/api",
+	    type: "post",
+	    data: dataPacket,
+	    // xhrFields: {
+	    //  withCredentials: true
+	    // },
+	    dataType: 'json'
+    });
+
+    request.success(function (response, textStatus, jqXHR){
+	    if(context!= undefined){
+	    	callback(response,context);
+	    }else{
+	    	callback(response);
+	    }
+	});
+}
 
 preference_callback = function(response){
 	if (response["return"]==true){
@@ -239,6 +283,7 @@ load_preference = function(){
 
 $('#plannertab').on('click',function(){
 	clear_planner();
+	app.recipeList.reset();
 	$("html, body").animate({ scrollTop: 0 }, "slow");
 	$('#planner-table').hide();
 	$('#generate_grocery').hide();
@@ -263,16 +308,14 @@ $('#plannertab').on('click',function(){
 			    var jsonPacket = JSON.stringify(packet);
 			    AjaxRequest(jsonPacket,planner_callback);
 		    }
-	$('#load_bar').animate({ width: "110%" },400,function() {
+	$('#load_bar').animate({ width: "110%" },1400,function() {
 	    
         $('#planner_panel').animate({height:600},1000);
-        $('#planner-table').show(1500, function(){
+        $('#test-table').show(1500, function(){
+        	$('#test-table').removeClass('hidden');
         	$('#load_bar_div').hide(1000);
-        	$('#planner_panel').animate({height:680},500);
-        	$('#load_bar').animate({ width: "0%" });
-        	$('.carousel').carousel('pause');
-
-        	
+        	// $('#planner_panel').animate({height:1},500);
+        	$('#load_bar').animate({ width: "0%" });        	
 		    $('#generate_grocery').show();
         });
 	  }
@@ -308,23 +351,6 @@ recipes_callback = function(response){
     }
 }
 
-
-
-bind_selector = function(sel){
-	sel.click(function() {
-		var ind = $(this).data("idx");
-	    $('#recipe-carousel').children().each(function( index, value ){
-	    	if(index==ind){
-	    		$(this).addClass('active');
-	    	}
-	    	else{
-	    		$(this).removeClass('active');
-	    	}
-	    });
-	    $('#recipe_modal').modal('show');
-	});
-}
-
 get_image = function(recipe_name){
     var replaced = recipe_name.split(' ').join('+');
     var img = $('<img id="dynamic">');
@@ -345,112 +371,18 @@ add_recipes_to_plan = function(data){
 	var ctr = 1;
 	$.each( data, function( index, value ){
 		// console.log(value);
-		value["picture"]= get_image_name(value['name']);
-		value["time_required"]["total_time"]=parseInt(value['time_required']['prep time'])+parseInt(value['time_required']['cooking time']);
-		value['instructions'].reverse();
+		process_recipe(value);
 		var temp = new app.Recipe(value);
 		// console.log(value["picture"]);
 		app.recipeList.add(temp);
-		
-		var ul = $('<ul style="margin: 0 auto;"></ul>');
-		$.each(value['ingredients'], function(k, v) {
-		    //display the key and value pair
-		    var li = $('<li style="margin:0!important; padding:0!important;"></li>');
-		    li.append($('<p></p>').text(k + ' - ' + v));
-		    ul.append(li);
-		});
-		var instr_ol = $('<ol style="margin: 0 auto;"></ol>');
-		value['instructions']
-		for (var i = value['instructions'].length-1; i >-1; i--){
-			var lii = $('<li style="margin:0!important; padding:0!important;"></li>');
-		    lii.append($('<p></p>').text(value['instructions'][i]));
-		    instr_ol.append(lii);
-		    // console.log("asdas");
-		}
-
-		var a = get_image(value['name']);
-		var name = $('<h4 style="color: #27ae60 !important;" ></h4>');
-		var total_time = parseInt(value['time_required']['prep time'])+parseInt(value['time_required']['cooking time']);
-		// console.log(total_time);
-
-		name.text(value['name']);
-		// will add recipe to the carousel 
-		var master_div = $('<div class="item" style="height:500px;"></div>');
-		var scroll_container = $('<div data-spy="scroll" data-target="#navbar'+String(ctr)+'" style="height: 100%;overflow-y: scroll;padding-top:12%;"></div>');
-		var instruction_div = $('<div></div>');
-		var pic_div = $('<div style="margin-left:30px;" align="center" "></div>'); pic_div.attr('id',String(ctr)+"pic");
-		var ingr_div = $('<div style="margin-left:30px;"></div>'); ingr_div.attr('id',String(ctr)+"ingr");
-		var instr_div = $('<div></div>'); 
-		instr_div.attr('id',String(ctr)+"instr");
-		var clone_i = a.clone();
-		clone_i.attr('height','400');
-		clone_i.attr('width','400');
-		master_div.append('\
-			<nav id="navbar'+String(ctr)+'" class="navbar navbar-default navbar-fixed-top" role="navigation">\
-				<div class="container-fluid">\
-					<div class="navbar-header">\
-			          <a class="navbar-brand" href="#'+String(ctr)+"pic"+'"">'+name.clone().html()+'</a>\
-		         	</div>\
-	        	</div>\
-	        </nav>');
-		pic_div.append(clone_i);
-		scroll_container.append(pic_div);
-		instruction_div.append('<hr>');
-		var info = $('<h4>Scroll down for more</h4>');
-		scroll_container.append(info);
-		ingr_div.append(ul);
-		instruction_div.append(ingr_div);
-		instruction_div.append('<hr>');
-		instr_div.append(instr_ol);
-		instruction_div.append(instr_div);
-		scroll_container.append(instruction_div)
-		master_div.append(scroll_container);
-		scroll_container.scroll(function(){
-			info.hide();
-		});
-		// $('#recipe-carousel').append(master_div);
-
-		//
-		// var div = $('<div id="recipe_div" style="height: 450px" ></div>').data("idx", ctr-1);
-		
-		
-
-		var description = $('<span style="color: #27ae60 !important; overflow: hidden;" class="glr-text"></span>');
-		var title = $('<span class="glr-title"></span>');
-		title.text(value['name']);
-		title.appendTo(description);
-		description.append(value['description'].trunc(100));
-		var descrip = $('<p style="color: #27ae60 !important;" align="top"></p>');
-		descrip.text(value['description']);
-		var li = $('<li id="recipe_card" class="col-sm-4 col-md-3" style="height: 300px; overflow:auto;padding-left:10px;"></li>').data("idx", ctr-1);;
-
-		// a.addClass('img-responsive');
-		a.attr('height','200px');
-		a.attr('width','200px');
-		// a.appendTo(div);
-		var time_badge = $('<span class="badge badge-success"></span>');
-		time_badge.append(value['time_required']['total time']);
-		var thumbnail = $('<span class="glr-thumbnail relative"></span>');
-		var image_label = $('<div id="img_label"></div>');
-		image_label.text(value['name'].trunc(30));
-		a.appendTo(thumbnail);
-		// image_label.appendTo(thumbnail);
-		time_badge.text(String(total_time)+" minutes");
-		time_badge.appendTo(thumbnail);
-		thumbnail.appendTo(li);
-		bind_selector(li);
-		ctr++;
-		// name.appendTo(div);
-		// time.appendTo(li);
-		// descrip.appendTo(div);
-
-		// div.appendTo(li);
-		description.appendTo(li);
-		// li.appendTo('#planner-table');
 	});
-	
 }
 
+process_recipe = function(value){
+	value["picture"]= get_image_name(value['name']);
+	value["time_required"]["total_time"]=parseInt(value['time_required']['prep time'])+parseInt(value['time_required']['cooking time']);
+	value['instructions'].reverse();
+}
 preference_set_callback = function(response){
 	if (response["return"]==true){
 		menu_plan=null;
@@ -611,24 +543,7 @@ ImageAjaxRequest = function(img_name,callback)
 	});
 }
 
-AjaxRequest = function(dataPacket,callback)
-{
-    request = $.ajax({
-	    url: "/api",
-	    type: "post",
-	    data: dataPacket,
-	    // xhrFields: {
-	    //  withCredentials: true
-	    // },
-	    dataType: 'json'
-    });
 
-    request.success(function (response, textStatus, jqXHR){
-	    // response = JSON.stringify(response); //{"return":false,"error":"Account already exists"}
-	    callback(response);
-	    
-	});
-}
 interested = function(){
 	$("html, body").animate({ scrollTop: 0 }, "slow", function(){
 		$('#register').modal('show');

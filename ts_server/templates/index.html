@@ -265,7 +265,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 		  				<div id="planner_panel" align="center">
 			  				<h1 align="center" class="planner-title">Your week</h1>
 							
-			  				<div  style="position:absolute; position:absolute; top:0; right:0;" class="inline">
+			  				<div  style="position:absolute; position:absolute; top:4em; right:0;" class="inline">
 			  				<label style="display:inline;" for="subscription_check">Email me: </label>
 								<input id="subscribe-checkbox" align="center" class="pull-right" name="subscribe-checkbox" type="checkbox" data-off-color="danger" checked data-on-color="success" checked data-size="mini" checked>
 			  				</div>
@@ -275,7 +275,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 							    <span class="sr-only">45% Complete</span>
 							  </div>
 							</div>
-							<ul id="test-table" class="row list-inline glr-list">
+							<ul id="test-table" class="row list-inline glr-list hidden">
 								</ul>
 								<ul id="planner-table" class="row list-inline glr-list hidden">
 								</ul>
@@ -478,16 +478,17 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
       <span class="glr-thumbnail relative">
       	<img id="dynamic" src="<%- picture%>" height="200px" width="200px">
 	      <span class="badge badge-success"><%- time_required['total_time']%> minutes</span>
+	      <span id="glyphchange" class="glyphicon glyphicon-refresh"></span>
       </span>
       <span style="color: #27ae60 !important; overflow: hidden;" class="glr-text">
 	  	<span class="glr-title"><%- name %></span><%- description %>
 	  </span>
 	  </div>
     </script>
-
+<!-- long ass modal for modal -->
   <script type="text/template" id="modal-template">
     <div class="bbm-modal__topbar">
-      <h3 class="navbar-brand"><%- name%></h3>
+      <h3 class="navbar-brand" style="width:100%;"><%- name%></h3>
     </div>
     <div class="bbm-modal__section">
       <div class="row">
@@ -513,7 +514,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
         </div>
         <div id="collapseOne" class="panel-collapse collapse" style="height: 0px;">
           <div class="panel-body">
-            <div style="height:235px;overflow-y:auto;" >
+            <div style="height:225px;overflow-y:auto;" >
           <ol>
              <% _.each(instructions, function(instruction){ %>
                   <li><%- instruction%></li>
@@ -535,7 +536,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
         <div id="collapseTwo" class="panel-collapse collapse in" style="height: auto;">
 
           <div class="panel-body">
-          <div style="height:235px;overflow-y:auto;" >
+          <div style="height:225px;overflow-y:auto;" >
             <ul>
             <% _.each(ingredients, function(k,v){ %>
                   <li><%- k%> - <%- v%></li>

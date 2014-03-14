@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-06 08:53:55
+# @Last Modified time: 2014-03-14 14:55:08
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -31,7 +31,8 @@ class ApiHandler(BaseHandler):
 						'get_recipes':self.get_recipes,
 						'get_latest_plan':self.get_latest_plan,
 						'generate_menu':self.generate_menu,
-						'set_subscribed':self.set_subscribed
+						'set_subscribed':self.set_subscribed,
+						'get_new_from_category':self.new_from_category
 					}
 
 	def post(self):
@@ -39,6 +40,7 @@ class ApiHandler(BaseHandler):
 		if self.req is None:
 			return
 		try:
+
 			self.cases[self.req](**self.req_val)
 			return
 		except ValueError:
@@ -115,6 +117,13 @@ class ApiHandler(BaseHandler):
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'recipes':recipes}))
 		# self.finish()
 
+	def new_from_category(self, recipe):
+		if not self.validate():
+			return self.validate_cookie()
+		print recipe
+
+		kw = exchange_recipe(self.session['AID'],recipe)
+		self.write(self.json_packet(retval=True, return_code = 0, packet = {'new_recipe':kw}))
 	@web.asynchronous
 	def generate_menu(self,values):
 		if not self.validate():
