@@ -23,11 +23,17 @@ height:928px;
 }
 
 #recipe_card{
-	
+
 	/*border-color:#27ae60!important;*/
 	border:2px solid;
 	border-radius:25px;
 }
+
+.recipe_container:hover
+{
+	background-color: #369;
+}
+
 img+span.badge {
     position: absolute;
     top: 1em;

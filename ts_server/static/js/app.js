@@ -2,8 +2,104 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-13 00:23:06
+* @Last Modified time: 2014-03-13 22:20:23
 */
+$(document).ready(function() {
+
+//backbone app initialization 
+var app = {}; // create namespace for our app
+
+// the user model - will expand further in the future to accomodate a user page
+app.User = Backbone.Model.extend({
+  defaults: {
+    username: '',
+    subscribed: false,
+    preferences:[],
+    meals:0
+  }
+});
+
+// the recipe model 
+app.Recipe = Backbone.Model.extend({
+  defaults: {
+    name: '',
+    time_required:'',
+    description: '',
+    ingredients:'',
+    instructions:'',
+    picture:''
+  }
+});
+
+app.RecipeList = Backbone.Collection.extend({
+  model: app.Recipe,
+  localStorage: new Store("backbone-recipe")
+});
+
+app.recipeList = new app.RecipeList();
+
+//barebone views
+app.RecipeView = Backbone.View.extend({
+  // el - stands for element. Every view has a element associate in with HTML 
+  //      content will be rendered.
+	tagName: 'li',
+	className:'col-sm-4 col-md-3',
+
+  template:_.template($('#recipe-template').html()),
+  // It's the first function called when this view it's instantiated.
+  initialize: function(){
+
+    // this.render();
+  },
+  // $el - it's a cached jQuery object (el), in which you can use jQuery functions 
+  //       to push content. Like the Hello World in this case.
+  render: function(){
+    this.$el.html(this.template(this.model.toJSON()));
+    return this;
+  },
+  events: {
+        'click .recipe_container': 'showModal'      },
+  showModal: function(){
+  	
+    var modalView = new Modal({model:this.model});
+ console.log(this.model);
+    $('.app').html(modalView.render().el);
+  },
+});
+
+app.RecipeListView = Backbone.View.extend({
+  // el - stands for element. Every view has a element associate in with HTML 
+  //      content will be rendered.
+  el: '#test-table',
+  
+  initialize: function () {
+        app.recipeList.on('add', this.addOne, this);
+        // app.recipeList.on('reset', this.addAll, this);
+        app.recipeList.fetch(); // Loads list from local storage
+   },
+   addOne: function(todo){
+        var view = new app.RecipeView({model: todo});
+        console.log("asd"+todo);
+        $('#test-table').append(view.render().el);
+      },
+  addAll: function(){
+    this.$('#test-table').html(''); // clean the todo list
+    _.each(app.recipeList.get(), this.addOne);
+    
+  },
+  // $el - it's a cached jQuery object (el), in which you can use jQuery functions 
+  //       to push content. Like the Hello World in this case.
+  render: function(){
+    this.$el.html(this.template(this.model.toJSON()));
+  }
+});
+
+// Create a modal view class
+      var Modal = Backbone.Modal.extend({
+        template: _.template($('#modal-template').html()),
+        cancelEl: '.bbm-button'
+      });
+
 
 // regex yumminess
 var username = "";
@@ -236,6 +332,11 @@ get_image = function(recipe_name){
 	return img;
 }
 
+get_image_name = function(recipe_name){
+	var replaced = recipe_name.split(' ').join('+');
+	return '/image/'+replaced;
+}
+
 scroll_clicked = function(){
 	console.log(($this));
 }
@@ -243,6 +344,14 @@ scroll_clicked = function(){
 add_recipes_to_plan = function(data){
 	var ctr = 1;
 	$.each( data, function( index, value ){
+		// console.log(value);
+		value["picture"]= get_image_name(value['name']);
+		value["time_required"]["total_time"]=parseInt(value['time_required']['prep time'])+parseInt(value['time_required']['cooking time']);
+		value['instructions'].reverse();
+		var temp = new app.Recipe(value);
+		// console.log(value["picture"]);
+		app.recipeList.add(temp);
+		
 		var ul = $('<ul style="margin: 0 auto;"></ul>');
 		$.each(value['ingredients'], function(k, v) {
 		    //display the key and value pair
@@ -251,18 +360,18 @@ add_recipes_to_plan = function(data){
 		    ul.append(li);
 		});
 		var instr_ol = $('<ol style="margin: 0 auto;"></ol>');
-
+		value['instructions']
 		for (var i = value['instructions'].length-1; i >-1; i--){
 			var lii = $('<li style="margin:0!important; padding:0!important;"></li>');
 		    lii.append($('<p></p>').text(value['instructions'][i]));
 		    instr_ol.append(lii);
-		    console.log("asdas");
+		    // console.log("asdas");
 		}
 
 		var a = get_image(value['name']);
 		var name = $('<h4 style="color: #27ae60 !important;" ></h4>');
 		var total_time = parseInt(value['time_required']['prep time'])+parseInt(value['time_required']['cooking time']);
-				console.log(total_time);
+		// console.log(total_time);
 
 		name.text(value['name']);
 		// will add recipe to the carousel 
@@ -299,7 +408,7 @@ add_recipes_to_plan = function(data){
 		scroll_container.scroll(function(){
 			info.hide();
 		});
-		$('#recipe-carousel').append(master_div);
+		// $('#recipe-carousel').append(master_div);
 
 		//
 		// var div = $('<div id="recipe_div" style="height: 450px" ></div>').data("idx", ctr-1);
@@ -337,8 +446,9 @@ add_recipes_to_plan = function(data){
 
 		// div.appendTo(li);
 		description.appendTo(li);
-		li.appendTo('#planner-table');
+		// li.appendTo('#planner-table');
 	});
+	
 }
 
 preference_set_callback = function(response){
@@ -691,6 +801,12 @@ $( '#user_password' ).bind('keypress', function(e){
    }
  });
 
+// initial app calls
+validate_cookie();
+clearform();
 
+Backbone.history.start();    
+var view = new app.RecipeListView();
 
+});
 

@@ -17,6 +17,7 @@
     <link href="{{ static_url("css/ui-elements.css")}}" rel="stylesheet">
     <link href="{{ static_url("css/custom.css")}}" rel="stylesheet">
 	<link href="{{ static_url("css/bootstrap-switch.css")}}" rel="stylesheet">
+	
 
 	<!-- Resources -->
 	<link href="{{ static_url("css/animate.css")}}" rel="stylesheet">
@@ -167,6 +168,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 					  <p class="text-muted lh">
 					    Home cooking, without the planning. <br>
 					    Know what’s for dinner this week in under 30 seconds.  
+					    
 					  </p>
 					  <!-- <a onclick="interested();" class="btn btn-color btn-block hidden btn-xxl">That sounds good!</a> -->
 					</div>
@@ -251,8 +253,10 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 			  
 			</div> <!-- / wrapper -->
 	    </div>
+
 		<div class="tab-pane" id="planner">
 			<div class="wrapper"> <!-- wrapper -->
+
 			  <div class="crp-showcase">
 				
 			  	<div class="col-sm-8 col-sm-offset-2">
@@ -260,7 +264,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 			  				
 		  				<div id="planner_panel" align="center">
 			  				<h1 align="center" class="planner-title">Your week</h1>
-
+							
 			  				<div  style="position:absolute; position:absolute; top:0; right:0;" class="inline">
 			  				<label style="display:inline;" for="subscription_check">Email me: </label>
 								<input id="subscribe-checkbox" align="center" class="pull-right" name="subscribe-checkbox" type="checkbox" data-off-color="danger" checked data-on-color="success" checked data-size="mini" checked>
@@ -271,7 +275,9 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 							    <span class="sr-only">45% Complete</span>
 							  </div>
 							</div>
-								<ul id="planner-table" class="row list-inline glr-list">
+							<ul id="test-table" class="row list-inline glr-list">
+								</ul>
+								<ul id="planner-table" class="row list-inline glr-list hidden">
 								</ul>
 							<p style="color: #27ae60 !important;">*Please excuse our menu - you may not have gotten the number of meals you requested, we are in the process of growing our collection.</p>
 			  				<button type="button" id="generate_grocery" class="btn btn-primary btn-lg">Generate Grocery List</button>
@@ -428,11 +434,13 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 			    </div>
 			  </div>
 		    </div>
-	<!-- 		</div> -->
       </div>
       
     </div>
   </div>
+
+<div class="modal fade" id="test_modal" tabindex="-1" role="dialog" aria-labelledby="recipeLabel" aria-hidden="true">
+</div>
 
   <div class="modal fade" id="grocery_modal" tabindex="-1" role="dialog" aria-labelledby="groceryLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -448,22 +456,123 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
     </div>
   </div>
 </div>
+<div class="app"></div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="{{ static_url("js/bootstrap.min.js")}}"></script>
+    <!-- backbone dependencies -->
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js" type="text/javascript"></script>
+
+
+	<!-- backbone templates -->
+	<script type="text/template" id="recipe-modal-template">
+      
+    </script>
+    <script type="text/template" id="recipe-template">
+    <div style="height:350px;"	class="recipe_container">
+      <span class="glr-thumbnail relative">
+      	<img id="dynamic" src="<%- picture%>" height="200px" width="200px">
+	      <span class="badge badge-success"><%- time_required['total_time']%> minutes</span>
+      </span>
+      <span style="color: #27ae60 !important; overflow: hidden;" class="glr-text">
+	  	<span class="glr-title"><%- name %></span><%- description %>
+	  </span>
+	  </div>
+    </script>
+
+  <script type="text/template" id="modal-template">
+    <div class="bbm-modal__topbar">
+      <h3 class="navbar-brand"><%- name%></h3>
+    </div>
+    <div class="bbm-modal__section">
+      <div class="row">
+		  <div class="col-md-8">
+		  	<img height="400px" width="400px" src="<%- picture%>"</img>
+		  </div>
+		  <div style="padding-left:0px!important;" class="col-md-4">
+		  	<div class="row">	
+			  <div >
+			  		<p>Prep time: <%- time_required['prep time']%> minutes<br> Cooking time: <%- time_required['cooking time']%> minutes</p>
+			  </div>
+		  </div>
+			  <div class="row">	
+
+			  <div class="panel-group" id="accordion">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed">
+              Instructions
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse" style="height: 0px;">
+          <div class="panel-body">
+            <div style="height:235px;overflow-y:auto;" >
+          <ol>
+             <% _.each(instructions, function(instruction){ %>
+                  <li><%- instruction%></li>
+              <% }); %>
+           </ol>
+         </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="">
+              Ingredients
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse in" style="height: auto;">
+
+          <div class="panel-body">
+          <div style="height:235px;overflow-y:auto;" >
+            <ul>
+            <% _.each(ingredients, function(k,v){ %>
+                  <li><%- k%> - <%- v%></li>
+              <% }); %>
+            </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+
+		  </div>
+		  </div>
+		</div>
+    </div>
+    <div class="bbm-modal__bottombar">
+      <a href="#" class="bbm-button">Close</a>
+    </div>
+  </script>
+
+
+    <!-- other scripts -->
     <script src="{{ static_url("js/app.js")}}"></script>
     <script src="{{ static_url("js/custom.js")}}"></script>
 	<script src="{{ static_url("js/scrolltopcontrol.js")}}"></script>
 	<script src="{{ static_url("js/bootstrap-switch.js")}}"></script>
 	<script data-cfasync="false" type='text/javascript'>
-		validate_cookie();
-		clearform();
 		$("[name='subscribe-checkbox']").bootstrapSwitch();
 		$("[name='subscribe-checkbox']").bootstrapSwitch('onText', 'Yes');
 		$("[name='subscribe-checkbox']").bootstrapSwitch('offText', ':(');
 	</script>
+	  <!-- Adding Backbone.Modal extension here -->
+  <link type="text/css" rel="stylesheet" href="{{ static_url("css/backbone.modal.css")}}">
+  <link type="text/css" rel="stylesheet" href="{{ static_url("css/backbone.modal.theme.css")}}">
+  <script type="text/javascript" src="{{ static_url("js/backbone.modal.js")}}"></script>
 <!-- UserVoice JavaScript SDK (only needed once on a page) -->
 <script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/3LC7GXf5djidgkAntnw.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
 
