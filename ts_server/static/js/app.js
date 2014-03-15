@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-14 16:11:43
+* @Last Modified time: 2014-03-14 22:52:23
 */
 $(document).ready(function() {
 
@@ -57,7 +57,7 @@ app.RecipeView = Backbone.View.extend({
   //       to push content. Like the Hello World in this case.
   render: function(){
     this.$el.html(this.template(this.model.toJSON()));
-    console.log("render new");
+    // console.log("render new");
     return this;
   },
   events: {
@@ -75,7 +75,7 @@ app.RecipeView = Backbone.View.extend({
         packet.get_new_from_category = placeholder;
         var jsonPacket = JSON.stringify(packet);
         AjaxRequest(jsonPacket,this.success, this);
-        console.log(this.model);
+        // console.log(this.model);
    },
   success:function(response, context){
    		if (response["return"]==true){
@@ -180,7 +180,7 @@ $('#subscribe-checkbox').on('switchChange', function (e, data) {
     packet.set_subscribed.values = value;
     var jsonPacket = JSON.stringify(packet);
     AjaxRequest(jsonPacket,function(response){});
-		console.log(value);
+		// console.log(value);
   		
 });
 
@@ -188,7 +188,7 @@ togglePreference = function(con){
 	var parent = (con.parentNode);
 	var val = parent.value;
 	if(isNumber(val)&&val!=0){
-		console.log(val);
+		// console.log(val);
 		(con.parentNode).className = "active"
 		var temp = parent.previousSibling;
 		meals = val;
@@ -216,7 +216,7 @@ togglePreference = function(con){
 			(con.parentNode).className = ""
 		}
 	}
-	console.log("pref is now "+preferences);
+	// console.log("pref is now "+preferences);
 }
 
 AjaxRequest = function(dataPacket,callback,context)
@@ -243,7 +243,7 @@ AjaxRequest = function(dataPacket,callback,context)
 preference_callback = function(response){
 	if (response["return"]==true){
 		$("#preference_container").empty();
-		console.log(response);
+		// console.log(response);
     	$.each( response['packet']['categories'], function( index, value ){
     		var li = $('<li></li>');
     		var al = $('<a onclick="togglePreference(this);"></a>');
@@ -326,6 +326,7 @@ $('#plannertab').on('click',function(){
 
 planner_callback = function(response){
 	if (response["return"]==true){
+		// console.log(response["packet"]["plan"]);
 		get_recipes(response["packet"]["plan"]);
 		needNew=false;
 	    }else{

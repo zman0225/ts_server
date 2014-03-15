@@ -23,7 +23,7 @@ class EmailWorker(threading.Thread):
 			kw = self.r.hgetall("email")
 			self.r.delete("email")
 			logging.info("Sending emails to %d recipients"%len(kw))
-			self.send(kw)
+			# self.send(kw)
 
 	def send(self, kw):
 		for u in kw.keys():

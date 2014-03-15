@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-14 14:55:08
+# @Last Modified time: 2014-03-14 22:46:26
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -124,6 +124,7 @@ class ApiHandler(BaseHandler):
 
 		kw = exchange_recipe(self.session['AID'],recipe)
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'new_recipe':kw}))
+		
 	@web.asynchronous
 	def generate_menu(self,values):
 		if not self.validate():
