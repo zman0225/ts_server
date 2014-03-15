@@ -19,7 +19,7 @@ class EmailWorker(threading.Thread):
 
 	def run(self):
 		logging.info("EmailWorker [ID]:%s"%str(self.threadID))
-		while not self.stopped.wait(10):
+		while not self.stopped.wait(3600):
 			kw = self.r.hgetall("email")
 			self.r.delete("email")
 			logging.info("Sending emails to %d recipients"%len(kw))
