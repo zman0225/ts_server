@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 11:59:15
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-01 15:12:50
+# @Last Modified time: 2014-03-14 17:09:58
 
 from mongoengine import *
 
@@ -50,8 +50,8 @@ class Recipe(DynamicDocument):
 	@classmethod
 	def _by_category(cls,name):
 		a = cls.objects(category=name)
-		if a.count()==1:
-			return a[0]
+		if a.count()>0:
+			return a
 		else:
 			raise RecipeNotFound,'category %s' % name
 
