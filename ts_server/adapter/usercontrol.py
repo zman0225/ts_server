@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 09:56:13
+# @Last Modified time: 2014-03-18 13:09:00
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -156,12 +156,15 @@ def get_random_recipe():
 
 def exchange_recipe(uid, recipe):
 	logging.info(uid)
+	acc = None
 	if uid is not None:
 		mp.track(uid, 'does not like '+str(recipe)+' exchanging')
 		acc = Account._by_id(uid)
 	re = Recipe._by_name(recipe)
 	recipes = get_recipe_by_category(re.category)
 	ind = random.randint(0,len(recipes)-1)
+
+	menu_list = None
 	if uid is not None:
 		curr_plan = acc.current_plan
 		menu_list = curr_plan.menu_plan
@@ -170,13 +173,15 @@ def exchange_recipe(uid, recipe):
 
 	if uid is not None:
 		while exchange in menu_list or exchange == str(re.pk):
-			if len(recipes)<2:
+			if len(recipes)<=3:
+				exchange = re.pk
 				break
 			ind = random.randint(0,len(recipes)-1)
 			exchange = recipes[ind]
 	else:
 		while exchange == str(re.pk):
-			if len(recipes)<2:
+			if len(recipes)<=3:
+				exchange = re.pk
 				break
 			ind = random.randint(0,len(recipes)-1)
 			exchange = recipes[ind]
