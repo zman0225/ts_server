@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 01:22:54
+# @Last Modified time: 2014-03-18 09:58:10
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -120,7 +120,9 @@ class ApiHandler(BaseHandler):
 		# self.finish()
 
 	def new_from_category(self, recipe):
-		session = self.session['AID'] if self.session.__contains__('AID') else None
+		session = None
+		if self.validate():
+			session = self.session['AID']
 		kw = exchange_recipe(session,recipe)
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'new_recipe':kw}))
 

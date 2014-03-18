@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 09:52:42
+# @Last Modified time: 2014-03-18 09:56:13
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -122,7 +122,6 @@ def get_recipe_by_id(rid, recipe_obj=None):
 		return kw
 	else:
 		re = recipe_obj if recipe_obj is not None else Recipe._by_id(rid) 
-		logging.info(rid)
 		kw = {"name":re.name,"category":re.category,"description":re.description,"time_required":re.time_required,
 			"source":re.source,"servings":re.servings,"instructions":re.instructions, "ingredients":re.ingredients}
 
@@ -156,6 +155,7 @@ def get_random_recipe():
 	return get_recipe_by_id(re)
 
 def exchange_recipe(uid, recipe):
+	logging.info(uid)
 	if uid is not None:
 		mp.track(uid, 'does not like '+str(recipe)+' exchanging')
 		acc = Account._by_id(uid)
@@ -188,7 +188,7 @@ def exchange_recipe(uid, recipe):
 		curr_plan.menu_plan = menu_list
 		curr_plan.save()
 		acc.current_plan = curr_plan
-		acc.save()
+
 	return get_recipe_by_id(rid=exchange)
 
 def create_plan(uid, acc_obj=None):
