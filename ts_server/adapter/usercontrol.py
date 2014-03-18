@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 13:09:00
+# @Last Modified time: 2014-03-18 13:11:08
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -173,14 +173,14 @@ def exchange_recipe(uid, recipe):
 
 	if uid is not None:
 		while exchange in menu_list or exchange == str(re.pk):
-			if len(recipes)<=3:
+			if len(recipes)<=len(menu_list):
 				exchange = re.pk
 				break
 			ind = random.randint(0,len(recipes)-1)
 			exchange = recipes[ind]
 	else:
 		while exchange == str(re.pk):
-			if len(recipes)<=3:
+			if len(recipes)<2:
 				exchange = re.pk
 				break
 			ind = random.randint(0,len(recipes)-1)
