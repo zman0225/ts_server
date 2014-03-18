@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 09:58:10
+# @Last Modified time: 2014-03-18 16:24:47
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -155,12 +155,13 @@ class ApiHandler(BaseHandler):
 		set_subscribed(self.session['AID'],values)
 		# self.finish()
 
+	@web.asynchronous
 	def get_grocery_list(self,values):
 		if not self.validate():
 			return self.validate_cookie()
 		kw = generate_grocery_list(self.session['AID'])
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'grocery':kw}))
-
+		self.finish()
 
 
 
