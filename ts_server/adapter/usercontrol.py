@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 13:31:57
+# @Last Modified time: 2014-03-18 13:33:30
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -241,6 +241,7 @@ def generate_grocery_list(uid):
 	curr_plan = acc.current_plan
 	curr_plan = curr_plan.menu_plan
 	kw_list = {}
+	logging.info("starting to generate grocery list with %s"%(str(len(curr_plan))))
 	for rid in curr_plan:
 		logging.info(rid)
 		re = Recipe._by_id(rid)
