@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 13:35:41
+# @Last Modified time: 2014-03-18 13:37:03
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -243,7 +243,7 @@ def generate_grocery_list(uid):
 	kw_list = {}
 	logging.info("starting to generate grocery list with %s"%(str(len(curr_plan))))
 	for rid in curr_plan:
-		logging.info(rid)
+		# logging.info(rid)
 		re = Recipe._by_id(rid)
 		kw = re.ingredients
 		for ing in kw:
@@ -261,10 +261,10 @@ def generate_grocery_list(uid):
 			else:
 				a = kw_list[cat]
 				a.add(ing)
-		logging.info(kw_list)
+		# logging.info(kw_list)
 	for kw in kw_list:
 		kw_list[kw] = list(kw_list[kw])
-	logging.info(kw_list)
+	# logging.info(kw_list)
 
 	return kw_list
 
