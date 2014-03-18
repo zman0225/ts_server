@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 13:33:30
+# @Last Modified time: 2014-03-18 13:35:41
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -250,7 +250,7 @@ def generate_grocery_list(uid):
 			try:
 				ing_obj = Ingredient._by_name(ing.encode("utf-8").strip())
 			except:
-				print ing,"does not exist"
+				logging.info(ing+"does not exist")
 				continue
 
 			cat = ing_obj.category
@@ -261,6 +261,7 @@ def generate_grocery_list(uid):
 			else:
 				a = kw_list[cat]
 				a.add(ing)
+		logging.info(kw_list)
 	for kw in kw_list:
 		kw_list[kw] = list(kw_list[kw])
 	logging.info(kw_list)
