@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 13:37:03
+# @Last Modified time: 2014-03-18 13:45:31
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -256,11 +256,11 @@ def generate_grocery_list(uid):
 			cat = ing_obj.category
 			if cat not in kw_list:
 				a = set()
-				a.add(ing)
+				a.add(ing+" "+kw[ing])
 				kw_list[cat] = a
 			else:
 				a = kw_list[cat]
-				a.add(ing)
+				a.add(ing+" "+kw[ing])
 		# logging.info(kw_list)
 	for kw in kw_list:
 		kw_list[kw] = list(kw_list[kw])
