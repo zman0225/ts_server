@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-14 22:46:26
+# @Last Modified time: 2014-03-18 01:22:54
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -32,6 +32,8 @@ class ApiHandler(BaseHandler):
 						'get_latest_plan':self.get_latest_plan,
 						'generate_menu':self.generate_menu,
 						'set_subscribed':self.set_subscribed,
+						'get_grocery_list':self.get_grocery_list,
+						'get_sample_recipe':self.get_sample_recipe,
 						'get_new_from_category':self.new_from_category
 					}
 
@@ -40,7 +42,7 @@ class ApiHandler(BaseHandler):
 		if self.req is None:
 			return
 		try:
-
+			print self.req_val
 			self.cases[self.req](**self.req_val)
 			return
 		except ValueError:
@@ -118,13 +120,10 @@ class ApiHandler(BaseHandler):
 		# self.finish()
 
 	def new_from_category(self, recipe):
-		if not self.validate():
-			return self.validate_cookie()
-		print recipe
-
-		kw = exchange_recipe(self.session['AID'],recipe)
+		session = self.session['AID'] if self.session.__contains__('AID') else None
+		kw = exchange_recipe(session,recipe)
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'new_recipe':kw}))
-		
+
 	@web.asynchronous
 	def generate_menu(self,values):
 		if not self.validate():
@@ -143,12 +142,22 @@ class ApiHandler(BaseHandler):
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'plan':plan.menu_plan}))
 		self.finish()
 
+	@web.asynchronous
+	def get_sample_recipe(self,values):
+		self.write(self.json_packet(retval=True, return_code = 0, packet = {'recipe':get_random_recipe()}))
+		self.finish()
+
 	def set_subscribed(self,values):
 		if not self.validate():
 			return self.validate_cookie()
 		set_subscribed(self.session['AID'],values)
 		# self.finish()
 
+	def get_grocery_list(self,values):
+		if not self.validate():
+			return self.validate_cookie()
+		kw = generate_grocery_list(self.session['AID'])
+		self.write(self.json_packet(retval=True, return_code = 0, packet = {'grocery':kw}))
 
 
 

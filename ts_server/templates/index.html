@@ -145,17 +145,38 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 			<div class="wrapper"> <!-- wrapper -->
 			  <div class="crp-showcase">
 			    <div class="container">
-				  <div class="row">
-				    <div class="col-sm-12">
+				  <!-- <div class="row"> -->
+				    <!-- <div class="col-sm-12"> -->
 					  <h1 class="text-center animated fadeInDown"> <span class="logo">TimeSavor (beta)</span> plan no more</h1>
 
 					  <h3 class="text-center animated fadeInDown">Know what's for dinner this week in under 30 seconds</h3>
-					  <div class="text-center actions animated fadeInDown delay2">
-					    <a class="btn btn-color" id="front_create" onclick="interested();">Create my menu!</a>
+					  <div align="center" class="text-center actions animated fadeInDown delay2">
+					  
+							<div  id="demo_recipe" class="row" width="400px;">
+							 
+							 <li style="color:black;height:350px;" class="col-sm-4 col-md-3">
+							 	<div class="row"> 
+									<div  style="padding-left: 10px;"class="demo_description">
+										<h3>Try us out!</h3>
+										<ul style="padding-right:10px;margin-left: -30px;">
+										<p>Click on the recipe card to see the specifics (ingredients/instructions)</p>
+										
+										<p>If you don't like your current menu, click on the recycle button (top-right of the image)</p>
+										
+										</ul>
+									<div style="padding-bottom: 25px; bottom: 0; left: 20px;position: absolute;"><a class="btn btn-color" id="front_create" onclick="interested();">Create my menu!</a>
+									</div>
+								</div>
+							 </div>
+							
+							</li>
+							</div>
+
+						
 					  </div>
 					 
-					</div>
-				  </div>
+					<!-- </div> -->
+				  <!-- </div> -->
 				</div>
 			  </div>
 			  <div class="container">
@@ -196,58 +217,6 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 				</div>
 
 				
-				<!-- Testimonials -->
-			    <!-- <div class="row">
-				  <div class="col-sm-8 col-sm-offset-2">
-				    <h2 class="oswald text-center">What Clients Say About Us</h2>
-				    <hr class="double-margin">
-				  </div>
-				</div>
-			    <div class="row">
-				  <div class="col-md-4 col-sm-12">
-				    <div class="review">
-					  <img src="{{static_url("img/client-1.jpg")}}" alt="...">
-					  <div class="review-text">
-					    <h3 class="text-color">Amazing Experience</h3>
-					    <p class="quote text-muted">
-					      <em>Nunc in neque nec arcu vulputate ullamcorper. Ut id orci ac arcu consectetur fringilla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</em>
-					    </p>
-					    <p class="text-muted">
-					      &#x2015; <strong>Alex Smith</strong>, Project Manager
-					    </p>
-					  </div>
-				    </div>
-				  </div>
-				  <div class="col-md-4 col-sm-12">
-				    <div class="review">
-					  <img src="{{static_url("img/client-2.jpg")}}" alt="...">
-					  <div class="review-text">
-					    <h3 class="text-color">Excellent Work!</h3>
-					    <p class="quote text-muted">
-					      <em>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id ipsum varius, tincidunt odio nec, placerat enim. Sed sit amet auctor augue, nec dignissim ligula.</em>
-					    </p>
-					    <p class="text-muted">
-					      &#x2015; <strong>Steve Williams</strong>, Site Owner
-					    </p>
-					  </div>
-				    </div>
-				  </div>
-				  <div class="col-md-4 col-sm-12">
-				    <div class="review">
-					  <img src="{{static_url("img/client-3.jpg")}}" alt="...">
-					  <div class="review-text">
-					    <h3 class="text-color">I Simply Love It</h3>
-					    <p class="quote text-muted">
-					      <em>Nunc in neque nec arcu vulputate ullamcorper. Ut id orci ac arcu consectetur fringilla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</em>
-					    </p>
-					    <p class="text-muted">
-					      &#x2015; <strong>George Wright</strong>, SEO Specialist
-					    </p>
-					  </div>
-				    </div>
-				  </div>
-			    </div> -->
-				<!-- // Testimonials -->
 				
 			  </div><!-- // Container --> 
 			  
@@ -474,7 +443,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
       
     </script>
     <script type="text/template" id="recipe-template">
-    <div style="height:350px;"	class="recipe_container">
+    <div style="height:350px;" class="recipe_container">
       <span class="glr-thumbnail relative">
       	<img id="dynamic" src="<%- picture%>" height="200px" width="200px">
 	      <span class="badge badge-success"><%- time_required['total_time']%> minutes</span>
@@ -559,6 +528,36 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
     </div>
   </script>
 
+	<script type="text/javascript" id="grocery_acc">
+
+<div class="panel-group" id="accordion" >
+	<% _.each(grocery, function(k,v){ %>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4 class="panel-title">
+
+				<a data-toggle="collapse" data-parent="#accordion" class="collapsed">
+				<%- v%>
+				</a>
+				</h4>
+			</div>
+			<div id="collapseTwo" class="panel-collapse collapse in" style="height: auto;">
+
+				<div class="panel-body">
+					<div style="height:225px;overflow-y:auto;" >
+						<ul>
+							<% _.each(k, function(index,val){ %>
+								<li><%- index%></li>
+							<% }); %>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	<% }); %>
+</div>
+
+	</script>
 
     <!-- other scripts -->
     <script src="{{ static_url("js/app.js")}}"></script>

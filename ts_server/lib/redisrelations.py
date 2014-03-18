@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-25 19:43:32
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-01 21:02:34
+# @Last Modified time: 2014-03-17 14:18:10
 
 import redis
 
@@ -31,3 +31,17 @@ def get_recipe_name_by_id(recipe_id):
 def get_recipe_by_category(category):
 	return list(r.smembers(category))
 
+def get_categories():
+	return r.smembers('categories')
+
+def add_ingredient_to_redis(item,category):
+	r.hsetnx('ingredients',item,category)
+
+def add_ingredients_to_redis(kw):
+	return r.msetnx(kw)
+
+def get_ingredient_category(item):
+	return r.hget('ingredients',item)
+
+def ingredient_exist(item):
+	return r.hexists('ingredients',item)

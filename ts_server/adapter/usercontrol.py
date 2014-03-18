@@ -3,12 +3,13 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-15 18:02:45
+# @Last Modified time: 2014-03-18 01:28:00
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
 from ts_server.models.plan import *
-from ts_server.lib.redisrelations import get_recipe_by_category, get_recipe_name_by_id
+from ts_server.models.ingredient import *
+from ts_server.lib.redisrelations import get_recipe_by_category, get_recipe_name_by_id, get_categories
 
 import logging
 import redis
@@ -147,31 +148,47 @@ def get_latest_plan(uid):
 		return plan
 	return create_plan(uid=uid,acc_obj=acc)
 
+def get_random_recipe():
+	cats = list(get_categories())
+	cat = cats[random.randint(0,len(cats)-1)]
+	recipes = list(get_recipe_by_category(cat))
+	re = recipes[random.randint(0,len(recipes)-1)]
+	return get_recipe_by_id(re)
+
 def exchange_recipe(uid, recipe):
-	mp.track(uid, 'does not like '+str(recipe)+' exchanging')
-	acc = Account._by_id(uid)
+	if uid:
+		mp.track(uid, 'does not like '+str(recipe)+' exchanging')
+		acc = Account._by_id(uid)
 	re = Recipe._by_name(recipe)
 	recipes = get_recipe_by_category(re.category)
 	ind = random.randint(0,len(recipes)-1)
-	curr_plan = acc.current_plan
-	menu_list = curr_plan.menu_plan
+	if uid:
+		curr_plan = acc.current_plan
+		menu_list = curr_plan.menu_plan
 
 	exchange = recipes[ind]
 
-	while exchange in menu_list or exchange == str(re.pk):
-		if len(recipes)<2:
-			break
-		ind = random.randint(0,len(recipes)-1)
-		exchange = recipes[ind]
-
+	if uid:
+		while exchange in menu_list or exchange == str(re.pk):
+			if len(recipes)<2:
+				break
+			ind = random.randint(0,len(recipes)-1)
+			exchange = recipes[ind]
+	else:
+		while exchange == str(re.pk):
+			if len(recipes)<2:
+				break
+			ind = random.randint(0,len(recipes)-1)
+			exchange = recipes[ind]
 	
-
-	re_ind = menu_list.index(str(re.pk))
-	menu_list[re_ind] = exchange
-	print "new ",exchange, "old",re.pk
-	curr_plan.menu_plan = menu_list
-	curr_plan.save()
-	acc.current_plan = curr_plan
+	if uid:
+		re_ind = menu_list.index(str(re.pk))
+		menu_list[re_ind] = exchange
+		print "new ",exchange, "old",re.pk
+		curr_plan.menu_plan = menu_list
+		curr_plan.save()
+		acc.current_plan = curr_plan
+		acc.save()
 	return get_recipe_by_id(rid=exchange)
 
 def create_plan(uid, acc_obj=None):
@@ -214,8 +231,31 @@ def create_plan(uid, acc_obj=None):
 	acc.save()
 	return pref;
 
+def generate_grocery_list(uid):
+	acc = Account._by_id(uid)
+	curr_plan = acc.current_plan
+	curr_plan = curr_plan.menu_plan
+	kw_list = {}
+	for rid in curr_plan:
+		re = Recipe._by_id(rid)
+		kw = re.ingredients
+		for ing in kw:
+			try:
+				ing_obj = Ingredient._by_name(ing.encode("utf-8").strip())
+			except:
+				print ing,"does not exist"
+				continue
 
-
-
+			cat = ing_obj.category
+			if cat not in kw_list:
+				a = set()
+				a.add(ing)
+				kw_list[cat] = a
+			else:
+				a = kw_list[cat]
+				a.add(ing)
+	for kw in kw_list:
+		kw_list[kw] = list(kw_list[kw])
+	return kw_list
 
 

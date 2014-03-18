@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-14 22:52:23
+* @Last Modified time: 2014-03-18 02:30:01
 */
 $(document).ready(function() {
 
@@ -45,6 +45,7 @@ app.RecipeView = Backbone.View.extend({
   //      content will be rendered.
 	tagName: 'li',
 	className:'col-sm-4 col-md-3',
+
 
   template:_.template($('#recipe-template').html()),
   // It's the first function called when this view it's instantiated.
@@ -443,20 +444,6 @@ $('#generate_menu').on('click',function(){
     }
 });
 
-$('#generate_grocery').on('click',function(){
-	$('#grocery_list').empty();
-	$.each(menu_plan, function(ind, value) {
-		$.each(value['ingredients'], function(k,v) {
-			var li = $('<li style="margin:0!important; padding:0!important;"></li>');
-		    li.append($('<p></p>').text(k + ' - ' + v));
-		    $('#grocery_list').append(li);
-		});
-	});
-	// console.log(dict);
-	console.log("clicked");
-	$("#grocery_modal").modal('show');
-	
-});
 
 enableCreateAccount = function(){
 	var sbmt = $('#create_account');
@@ -565,7 +552,7 @@ register_callback = function(response){
 }
 
 validation_callback = function(response){
-	console.log(response);
+	// console.log(response);
 	if (response["return"]==true){
     	validate(response);
 	}else{
@@ -717,10 +704,77 @@ $( '#user_password' ).bind('keypress', function(e){
    }
  });
 
+demo_callback = function(response){
+	console.log(response);
+	if (response["return"]==true){
+    	var re = response['packet']['recipe']
+    	process_recipe(re)
+    	var mod = new app.Recipe(re);
+    	var view = new app.RecipeView({model: mod});
+    	var htmlEl = view.render().el;
+    	var htmlEl = $(htmlEl);
+    	htmlEl.addClass('col-md-offset-3');
+    	// htmlEl.className = "";
+        $('#demo_recipe').prepend(htmlEl);
+        var el = $('');
+        // $('#demo_recipe').append(el);
+
+	}else{
+
+	}
+}
+$('#generate_grocery').on('click',function(){
+	// $('#grocery_list').empty();
+	// app.recipeList.each(function(model){
+	// 	  console.log(model); 
+	// 	});
+	// $.each(menu_plan, function(ind, value) {
+	// 	$.each(value['ingredients'], function(k,v) {
+	// 		var li = $('<li style="margin:0!important; padding:0!important;"></li>');
+	// 	    li.append($('<p></p>').text(k + ' - ' + v));
+	// 	    $('#grocery_list').append(li);
+	// 	});
+	// });
+	// // console.log(dict);
+	// console.log("clicked");
+	$("#grocery_modal").modal('show');
+	var packet = {};
+	packet.values = '';
+	var login = {};
+	login.get_grocery_list = packet;
+
+	var jsonPacket = JSON.stringify(login);
+	AjaxRequest(jsonPacket,grocery_callback);
+});
+
+grocery_callback = function(response){
+	if (response["return"]==true){
+    	var re = response['packet']['grocery'];
+    	console.log(re);
+    	var template = _.template(
+            $( "#grocery_acc" ).html()
+        );
+    	$('#grocery_list').html(template( response['packet'] ))
+  //   	console.log(re);
+  //   	$.each(re, function(k,v) {
+		// 	console.log(k);
+		// 	console.log(v);
+		// });
+	}else{
+
+	}
+}
 // initial app calls
 validate_cookie();
 clearform();
 
+var packet = {};
+packet.values = '';
+var login = {};
+login.get_sample_recipe = packet;
+
+var jsonPacket = JSON.stringify(login);
+AjaxRequest(jsonPacket,demo_callback);
 Backbone.history.start();    
 var view = new app.RecipeListView();
 

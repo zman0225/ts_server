@@ -22,6 +22,21 @@ body {
 height:928px;
 }
 
+#demo_recipe{
+	display: table-row;
+	border:2px solid;
+border-radius:25px;
+}
+#demo_recipe li {
+	display: table-cell;
+	height: 100%;
+	vertical-align: center;
+    list-style-type: none;
+    background: white;
+    float: none;
+    margin: 0 auto;
+}
+
 #recipe_card{
 
 	/*border-color:#27ae60!important;*/
@@ -1129,7 +1144,7 @@ a.carousel-arrow-next {
 	margin-top: -30px;
 	margin-bottom: 100px;
 	padding-top: 0px;
-	padding-bottom: 200px;
+	padding-bottom: 100px;
 	background: url("/static/img/prep.jpg") no-repeat top center;
 	background-attachment: fixed;
 	background-size: cover;

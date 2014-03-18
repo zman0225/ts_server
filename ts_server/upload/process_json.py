@@ -12,7 +12,7 @@ def process_recipe(recipe):
 	ingredients_dict = dict(recipe['ingredients'])
 	new_dict = {}
 	for key in ingredients_dict.keys():
-		new_key = key.replace('.','')
+		new_key = key.replace('.','').encode('utf-8')
 		new_key = new_key.replace('?','')
 		new_dict[new_key]=ingredients_dict[key]
 	print new_dict
@@ -21,13 +21,19 @@ def process_recipe(recipe):
 	servings = recipe['servings']
 	description = recipe['description'].encode('ascii', 'ignore')
 
-	image_fs = name+".jpg"
+	image_fs = 'ts_server/upload/'+name+".jpg"
 	image = None
 	if os.path.isfile(image_fs):
 		image = open(image_fs,'r')
 
-	recipe = new_recipe(name=name, description=description, category=category, instructions = instruction_list, servings=servings, time_required=time_dict, ingredients=new_dict,source=source,image=image)
+	print image_fs
+	try:
+		recipe = new_recipe(name=name, description=description, category=category, instructions = instruction_list, servings=servings, time_required=time_dict, ingredients=new_dict,source=source,image=image)
+		print "creating new"
+	except:
+		print 'ALREADY IN DATABASE!'
 	image.close()
+
 
 def read_json(fs):
 	json_data=open(fs,'r')
@@ -39,5 +45,5 @@ def read_json(fs):
 		process_recipe(recipe)
 
 if __name__ == '__main__':
-	connect_to_db("ts-server")
-	read_json('initial.json')
+	connect_to_db("ts-server",'23.253.209.158',27017,'ts_server','a2e7rqej')
+	read_json('ts_server/upload/initial.json')
