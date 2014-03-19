@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-19 17:35:53
+# @Last Modified time: 2014-03-19 17:38:22
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -123,6 +123,7 @@ def get_recipe_by_id(rid, recipe_obj=None):
 	else:
 		logging.info("params are "+str(rid)+" "+str(recipe_obj))
 		re = recipe_obj if recipe_obj is not None else Recipe._by_id(rid) 
+		logging.info("params is "+str(re))
 		kw = {"name":re.name,"category":re.category,"description":re.description,"time_required":re.time_required,
 			"source":re.source,"servings":re.servings,"instructions":re.instructions, "ingredients":re.ingredients}
 
