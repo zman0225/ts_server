@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-19 11:10:46
+# @Last Modified time: 2014-03-19 17:33:33
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -203,44 +203,47 @@ def exchange_recipe(uid, recipe):
 	return get_recipe_by_id(rid=exchange)
 
 def create_plan(uid, acc_obj=None):
-	mp.track(uid, 'generating new plan')
-	acc = Account._by_id(uid) if acc_obj is None else acc_obj
-	pref = acc.preference
-	meals = acc.meals
-	plans = []
-	recipe_name = []
-	
-	# simpler approach, compile all the possible recipes and go with that 
-	all_recipes = []
-	for pr in pref:
-		re = get_recipe_by_category(pr)
-		print re
-		all_recipes.extend(re)
+	try:
+		mp.track(uid, 'generating new plan')
+		acc = Account._by_id(uid) if acc_obj is None else acc_obj
+		pref = acc.preference
+		meals = acc.meals
+		plans = []
+		recipe_name = []
+		
+		# simpler approach, compile all the possible recipes and go with that 
+		all_recipes = []
+		for pr in pref:
+			re = get_recipe_by_category(pr)
+			print re
+			all_recipes.extend(re)
 
-	print all_recipes
-	if meals>=len(all_recipes):
-		plans = all_recipes
-	else:
-		for i in range(meals):
-			re_ind = random.randint(0,len(all_recipes)-1) if len(all_recipes)>0 else 0
+		print all_recipes
+		if meals>=len(all_recipes):
+			plans = all_recipes
+		else:
+			for i in range(meals):
+				re_ind = random.randint(0,len(all_recipes)-1) if len(all_recipes)>0 else 0
 
-			# while all_recipes[re_ind] in plans:
-			# 	re_ind = random.randint(0,len(all_recipes)-1) if len(pref)>0 else 0
+				# while all_recipes[re_ind] in plans:
+				# 	re_ind = random.randint(0,len(all_recipes)-1) if len(pref)>0 else 0
 
-			recipe_name.append(get_recipe_name_by_id(all_recipes[re_ind]))
-			plans.append(all_recipes[re_ind])
-			del all_recipes[re_ind]
+				recipe_name.append(get_recipe_name_by_id(all_recipes[re_ind]))
+				plans.append(all_recipes[re_ind])
+				del all_recipes[re_ind]
 
-	print plans
-	# print 'end meals is ',len(plans)
-	kw = {"recipes":recipe_name,"username":acc.username,"email":acc.email};
-	pickled = cPickle.dumps(kw)
-	r.hset("email",str(acc.pk),pickled)
-	logging.info("menu added to email queue %s"%uid)
-	pref = new_plan(uid,plans)
-	acc.current_plan = pref
-	acc.save()
-	return pref;
+		print plans
+		# print 'end meals is ',len(plans)
+		kw = {"recipes":recipe_name,"username":acc.username,"email":acc.email};
+		pickled = cPickle.dumps(kw)
+		r.hset("email",str(acc.pk),pickled)
+		logging.info("menu added to email queue %s"%uid)
+		pref = new_plan(uid,plans)
+		acc.current_plan = pref
+		acc.save()
+		return pref;
+	except Exception as e:
+		logging.info(e)
 
 def generate_grocery_list(uid):
 	acc = Account._by_id(uid)
