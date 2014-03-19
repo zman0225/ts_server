@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 13:45:31
+# @Last Modified time: 2014-03-18 21:16:01
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -193,7 +193,7 @@ def exchange_recipe(uid, recipe):
 		curr_plan.menu_plan = menu_list
 		curr_plan.save()
 		acc.current_plan = curr_plan
-
+	logging.info(exchange)
 	return get_recipe_by_id(rid=exchange)
 
 def create_plan(uid, acc_obj=None):
