@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-18 21:19:03
+# @Last Modified time: 2014-03-19 11:05:15
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -169,7 +169,7 @@ def exchange_recipe(uid, recipe):
 		menu_list = curr_plan.menu_plan
 
 	exchange = recipes[ind]
-	# logging.info(str(recipe)+" "+exchange)
+	logging.info(str(recipe)+" "+exchange)
 
 	if uid is not None:
 		while exchange in menu_list or exchange == str(re.pk):
@@ -185,7 +185,7 @@ def exchange_recipe(uid, recipe):
 				break
 			ind = random.randint(0,len(recipes)-1)
 			exchange = recipes[ind]
-	# logging.info(str(recipe)+" "+exchange)
+	logging.info(str(recipe)+" "+exchange)
 
 	if uid is not None:
 		re_ind = menu_list.index(str(re.pk))
@@ -194,7 +194,7 @@ def exchange_recipe(uid, recipe):
 		curr_plan.menu_plan = menu_list
 		curr_plan.save()
 		acc.current_plan = curr_plan
-	# logging.info(str(recipe)+" "+exchange)
+	logging.info(str(recipe)+" "+exchange)
 	return get_recipe_by_id(rid=exchange)
 
 def create_plan(uid, acc_obj=None):
