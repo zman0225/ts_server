@@ -1,6 +1,9 @@
 import os
 
 import praw
+import redis
+
+re = redis.Redis()
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 print HERE
@@ -77,7 +80,10 @@ def message_me(reddit_session, result, search_word):
     title = 'Nonprofit free meal planning app'
     # print result.author, result.title
     body = '[%s](%s)' % ("timesavorapp", "http://timesavorapp.com")
-    reddit_session.send_message(result.author, title, body)
+    if result.author not in re.smembers('sent'):
+        re.sadd('sent',result.author)
+        print 'sent to %s'%(str(result.author))
+        reddit_session.send_message(result.author, title, body)
 
 if __name__ == '__main__':
     main()
