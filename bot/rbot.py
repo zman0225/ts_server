@@ -17,7 +17,7 @@ def main():
                     'github.com/Damgaard/Reddit-Bots')
     r.login('zman0225', 'a2e7rqej')
     last_found_ids = load_last_found_ids()
-    search_word = 'meal planning'
+    search_word = 'food homecook dinner meal planning'
     bad_words = ['subreddit stats', 'electro', 'dubstep', 'house', 'music']
     newest_ids = get_newest_ids(r, search_word)
     print "searching"
