@@ -30,6 +30,7 @@ def main():
 
             if is_valid_result(result, bad_words):
                 message_me(r, result, search_word)
+
         store_last_found_ids(newest_ids)
 
 
