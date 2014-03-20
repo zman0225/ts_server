@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-19 21:34:08
+# @Last Modified time: 2014-03-19 21:40:30
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -193,9 +193,9 @@ def exchange_recipe(uid, recipe):
 		logging.info('here')
 		try:
 			re_ind = menu_list.index(str(re.pk))
-			logging.info('ind '+re_ind+" replacing "+exchange)
+			logging.info('ind '+str(re_ind)+" replacing "+str(exchange))
 			menu_list[re_ind] = exchange
-			logging.info("new "+exchange+" old "+re.pk)
+			logging.info("new "+str(exchange)+" old "+str(re.pk))
 			curr_plan.menu_plan = menu_list
 			curr_plan.save()
 			acc.current_plan = curr_plan
