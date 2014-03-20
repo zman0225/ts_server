@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-20 12:38:00
+# @Last Modified time: 2014-03-20 12:42:02
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -131,7 +131,7 @@ class ApiHandler(BaseHandler):
 		if not self.validate():
 			return self.validate_cookie()
 		plan = create_plan(self.session['AID'])
-		plans = [str(x) for x plan.menu_plan]
+		plans = [str(x) for x in plan.menu_plan]
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'plan':plans}))
 		self.finish()
 
@@ -141,7 +141,7 @@ class ApiHandler(BaseHandler):
 			return self.validate_cookie()
 
 		plan = get_latest_plan(self.session['AID'])
-		plans = [str(x) for x plan.menu_plan]
+		plans = [str(x) for x in plan.menu_plan]
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'plan':plans}))
 		self.finish()
 
