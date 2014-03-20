@@ -75,7 +75,7 @@ def is_valid_result(result, bad_words):
 
 def message_me(reddit_session, result, search_word):
     title = 'Nonprofit free meal planning app'
-    print result.author, result.title
+    # print result.author, result.title
     body = '[%s](%s)' % ("timesavorapp", "http://timesavorapp.com")
     reddit_session.send_message(result.author, title, body)
 
