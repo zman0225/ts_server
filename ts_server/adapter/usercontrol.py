@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-20 12:31:38
+# @Last Modified time: 2014-03-20 15:30:22
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -201,7 +201,7 @@ def exchange_recipe(uid, recipe):
 			acc.current_plan = curr_plan
 		except Exception as e:
 			logging.info(e)
-	# logging.info(str(recipe)+" "+str(exchange))
+	logging.info(str(recipe)+" "+str(exchange))
 	return get_recipe_by_id(rid=exchange)
 
 def create_plan(uid, acc_obj=None):
