@@ -77,7 +77,7 @@ def message_me(reddit_session, result, search_word):
     title = 'Nonprofit free meal planning app'
     print result.author, result.title
     body = '[%s](%s)' % ("timesavorapp", "http://timesavorapp.com")
-    reddit_session.send_message('zman0225', title, body)
+    reddit_session.send_message(result.author, title, body)
 
 if __name__ == '__main__':
     main()
