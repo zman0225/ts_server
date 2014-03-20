@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-19 21:40:30
+# @Last Modified time: 2014-03-20 12:29:40
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -171,7 +171,7 @@ def exchange_recipe(uid, recipe):
 		menu_list = curr_plan.menu_plan
 
 	exchange = recipes[ind]
-	logging.info(str(recipe)+" "+exchange)
+	logging.info(str(recipe)+" "+str(exchange))
 
 	if uid is not None:
 		while exchange in menu_list or exchange == str(re.pk):
@@ -187,7 +187,7 @@ def exchange_recipe(uid, recipe):
 				break
 			ind = random.randint(0,len(recipes)-1)
 			exchange = recipes[ind]
-	logging.info(str(recipe)+" "+exchange)
+	logging.info(str(recipe)+" "+str(exchange))
 
 	if uid is not None:
 		logging.info('here')
