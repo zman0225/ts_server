@@ -27,10 +27,8 @@ def main():
     while True:
         for result in search_results(r, search_word, last_found_ids):
         	print "searching"
-
             if is_valid_result(result, bad_words):
                 message_me(r, result, search_word)
-
         store_last_found_ids(newest_ids)
 
 
