@@ -24,11 +24,12 @@ def main():
     bad_words = ['subreddit stats', 'electro', 'dubstep', 'house', 'music']
     newest_ids = get_newest_ids(r, search_word)
     print "searching"
-    for result in search_results(r, search_word, last_found_ids):
-    	print "searching"
-        if is_valid_result(result, bad_words):
-            message_me(r, result, search_word)
-    store_last_found_ids(newest_ids)
+    while True:
+        for result in search_results(r, search_word, last_found_ids):
+        	print "searching"
+            if is_valid_result(result, bad_words):
+                message_me(r, result, search_word)
+        store_last_found_ids(newest_ids)
 
 
 def load_last_found_ids():
@@ -54,6 +55,7 @@ def search_results(reddit_session, search_word, stop_ids):
     Stop when we hit stop_id
 
     """
+    print reddit_session
     for result in reddit_session.search(search_word, sort='new', limit=None,
                                         place_holder=stop_ids[0]):
         if result.id in stop_ids:
