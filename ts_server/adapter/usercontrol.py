@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-19 17:38:22
+# @Last Modified time: 2014-03-19 21:34:08
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -248,35 +248,38 @@ def create_plan(uid, acc_obj=None):
 		logging.info(e)
 
 def generate_grocery_list(uid):
-	acc = Account._by_id(uid)
-	curr_plan = acc.current_plan
-	curr_plan = curr_plan.menu_plan
-	kw_list = {}
-	logging.info("starting to generate grocery list with %s"%(str(len(curr_plan))))
-	for rid in curr_plan:
-		# logging.info(rid)
-		re = Recipe._by_id(rid)
-		kw = re.ingredients
-		for ing in kw:
-			try:
-				ing_obj = Ingredient._by_name(ing.encode("utf-8").strip())
-			except:
-				logging.info(ing+"does not exist")
-				continue
+	try:
+		acc = Account._by_id(uid)
+		curr_plan = acc.current_plan
+		curr_plan = curr_plan.menu_plan
+		kw_list = {}
+		logging.info("starting to generate grocery list with %s"%(str(len(curr_plan))))
+		for rid in curr_plan:
+			# logging.info(rid)
+			re = Recipe._by_id(rid)
+			kw = re.ingredients
+			for ing in kw:
+				try:
+					ing_obj = Ingredient._by_name(ing.encode("utf-8").strip())
+				except:
+					logging.info(ing+"does not exist")
+					continue
 
-			cat = ing_obj.category
-			if cat not in kw_list:
-				a = set()
-				a.add(ing+" "+kw[ing])
-				kw_list[cat] = a
-			else:
-				a = kw_list[cat]
-				a.add(ing+" "+kw[ing])
+				cat = ing_obj.category
+				if cat not in kw_list:
+					a = set()
+					a.add(ing+" "+kw[ing])
+					kw_list[cat] = a
+				else:
+					a = kw_list[cat]
+					a.add(ing+" "+kw[ing])
+			# logging.info(kw_list)
+		for kw in kw_list:
+			kw_list[kw] = list(kw_list[kw])
 		# logging.info(kw_list)
-	for kw in kw_list:
-		kw_list[kw] = list(kw_list[kw])
-	# logging.info(kw_list)
 
-	return kw_list
+		return kw_list
+	except Exception as e:
+		logging.info(e)
 
 
