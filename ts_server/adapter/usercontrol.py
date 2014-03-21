@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-21 19:29:15
+# @Last Modified time: 2014-03-21 19:34:19
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -305,7 +305,11 @@ def email_grocery_list(uid):
 
 	a=a+'</ul></html>'
 	mp.track(str(acc.pk), 'requested grocery list')
-	send_simple_message(acc.email,acc.username,a)
+	try:
+		r = send_simple_message(acc.email,acc.username,a)
+		logging.info("email status: "+r.status_code)
+	except Exception as e:
+		logging.info(e)
 
 
 
