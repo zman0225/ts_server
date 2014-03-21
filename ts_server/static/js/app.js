@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-18 02:30:01
+* @Last Modified time: 2014-03-21 19:28:04
 */
 $(document).ready(function() {
 
@@ -737,6 +737,7 @@ $('#generate_grocery').on('click',function(){
 	// });
 	// // console.log(dict);
 	// console.log("clicked");
+	$('#email_grocery').text('email me the grocery list!');
 	$("#grocery_modal").modal('show');
 	var packet = {};
 	packet.values = '';
@@ -746,6 +747,18 @@ $('#generate_grocery').on('click',function(){
 	var jsonPacket = JSON.stringify(login);
 	AjaxRequest(jsonPacket,grocery_callback);
 });
+
+$('#email_grocery').on('click',function(){
+	$('#email_grocery').text('sent!');
+	var packet = {};
+	packet.values = '';
+	var login = {};
+	login.email_grocery_list = packet;
+
+	var jsonPacket = JSON.stringify(login);
+	AjaxRequest(jsonPacket,{});
+});
+
 
 grocery_callback = function(response){
 	if (response["return"]==true){

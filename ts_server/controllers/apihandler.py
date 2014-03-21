@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-20 12:42:02
+# @Last Modified time: 2014-03-21 18:58:56
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -34,7 +34,8 @@ class ApiHandler(BaseHandler):
 						'set_subscribed':self.set_subscribed,
 						'get_grocery_list':self.get_grocery_list,
 						'get_sample_recipe':self.get_sample_recipe,
-						'get_new_from_category':self.new_from_category
+						'get_new_from_category':self.new_from_category,
+						'email_grocery_list':self.email_grocery_list
 					}
 
 	def post(self):
@@ -165,7 +166,11 @@ class ApiHandler(BaseHandler):
 		self.finish()
 
 
-
+	def email_grocery_list(self, values):
+		if not self.validate():
+			return self.validate_cookie()
+		# logging.info('requesting')
+		email_grocery_list(self.session['AID'])
 
 
 

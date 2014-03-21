@@ -8,6 +8,7 @@ import time
 import os
 import requests
 
+
 class EmailWorker(threading.Thread):
 	def __init__(self, threadID, event):
 		super(EmailWorker, self).__init__()

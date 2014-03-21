@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-20 15:30:22
+# @Last Modified time: 2014-03-21 19:29:15
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -16,6 +16,7 @@ import redis
 import random
 import cPickle
 import time
+import requests
 
 r = redis.Redis()
 
@@ -281,5 +282,34 @@ def generate_grocery_list(uid):
 		return kw_list
 	except Exception as e:
 		logging.info(e)
+
+def send_simple_message(email,name,msg):
+		return requests.post(
+			"https://api.mailgun.net/v2/mg.timesavorapp.com/messages",
+			auth=("api", "key-9y7c3fgcidcnqzopu-psjg0nq3wbg7h3"),
+			data={"from": "Chef Sal <chefsal@mg.timesavorapp.com>",
+				"to": [email],
+				"subject": "Hello, %s - your grocery list this week"%name,
+				"html": msg})
+
+def email_grocery_list(uid):
+	acc = Account._by_id(uid)
+	kw = generate_grocery_list(uid)
+	a = "<html><h2>Your Grocery</h2><div><p>Visit: http://timesavorapp.com/\n\
+		If you have any questions or concern, please don't hesitate to email us back.\n\
+		<br>Cheers,<br>Chef Sal</p></div><ul>"
+	for k in kw:
+		a = a+'<h3>'+k+'</h3>'
+		for it in kw[k]:
+			a = a+'<input type="checkbox" >'+str(it)+'</input><br>'
+
+	a=a+'</ul></html>'
+	mp.track(str(acc.pk), 'requested grocery list')
+	send_simple_message(acc.email,acc.username,a)
+
+
+
+
+
 
 
