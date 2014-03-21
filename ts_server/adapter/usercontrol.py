@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-21 19:38:25
+# @Last Modified time: 2014-03-21 19:56:42
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -293,21 +293,22 @@ def send_simple_message(email,name,msg):
 				"html": msg})
 
 def email_grocery_list(uid):
-	acc = Account._by_id(uid)
-	kw = generate_grocery_list(uid)
-	a = "<html><h2>Your Grocery</h2><div><p>Visit: http://timesavorapp.com/\n\
-		If you have any questions or concern, please don't hesitate to email us back.\n\
-		<br>Cheers,<br>Chef Sal</p></div><ul>"
-	for k in kw:
-		a = a+'<h3>'+k+'</h3>'
-		for it in kw[k]:
-			a = a+'<input type="checkbox" >'+str(it)+'</input><br>'
-
-	a=a+'</ul></html>'
-	mp.track(str(acc.pk), 'requested grocery list')
 	try:
+		acc = Account._by_id(uid)
+		kw = generate_grocery_list(uid)
+		a = "<html><h2>Your Grocery</h2><div><p>Visit: http://timesavorapp.com/\n\
+			If you have any questions or concern, please don't hesitate to email us back.\n\
+			<br>Cheers,<br>Chef Sal</p></div><ul>"
+		for k in kw:
+			a = a+'<h3>'+k.encode('utf-8')+'</h3>'
+			for it in kw[k]:
+				a = a+'<input type="checkbox" >'+it.encode('utf-8')+'</input><br>'
+
+		a=a+'</ul></html>'
+		print a
 		r = send_simple_message(acc.email,acc.username,a)
-		logging.info("emailed")
+		logging.info(r.status_code)
+		mp.track(uid, 'emailed grocery list')
 	except Exception as e:
 		logging.info(e)
 
