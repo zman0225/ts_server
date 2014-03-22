@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-21 19:56:42
+# @Last Modified time: 2014-03-21 23:23:50
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -158,41 +158,40 @@ def get_random_recipe():
 	return get_recipe_by_id(re)
 
 def exchange_recipe(uid, recipe):
-	acc = None
-	if uid is not None:
-		mp.track(uid, 'does not like '+str(recipe)+' exchanging')
-		acc = Account._by_id(uid)
-	re = Recipe._by_name(recipe)
-	recipes = get_recipe_by_category(re.category)
-	ind = random.randint(0,len(recipes)-1)
+	try:
+		acc = None
+		if uid is not None:
+			mp.track(uid, 'does not like '+str(recipe)+' exchanging')
+			acc = Account._by_id(uid)
+		re = Recipe._by_name(recipe)
+		recipes = get_recipe_by_category(re.category)
+		ind = random.randint(0,len(recipes)-1)
 
-	menu_list = None
-	if uid is not None:
-		curr_plan = acc.current_plan
-		menu_list = curr_plan.menu_plan
+		menu_list = None
+		if uid is not None:
+			curr_plan = acc.current_plan
+			menu_list = curr_plan.menu_plan
 
-	exchange = recipes[ind]
-	# logging.info(str(recipe)+" "+str(exchange))
+		exchange = recipes[ind]
+		# logging.info(str(recipe)+" "+str(exchange))
 
-	if uid is not None:
-		while exchange in menu_list or exchange == str(re.pk):
-			if len(recipes)<=len(menu_list):
-				exchange = re.pk
-				break
-			ind = random.randint(0,len(recipes)-1)
-			exchange = recipes[ind]
-	else:
-		while exchange == str(re.pk):
-			if len(recipes)<2:
-				exchange = re.pk
-				break
-			ind = random.randint(0,len(recipes)-1)
-			exchange = recipes[ind]
-	# logging.info(str(recipe)+" "+str(exchange))
+		if uid is not None:
+			while exchange in menu_list or exchange == str(re.pk):
+				if len(recipes)<=len(menu_list):
+					exchange = re.pk
+					break
+				ind = random.randint(0,len(recipes)-1)
+				exchange = recipes[ind]
+		else:
+			while exchange == str(re.pk):
+				if len(recipes)<2:
+					exchange = re.pk
+					break
+				ind = random.randint(0,len(recipes)-1)
+				exchange = recipes[ind]
+		# logging.info(str(recipe)+" "+str(exchange))
 
-	if uid is not None:
-		logging.info('here')
-		try:
+		if uid is not None:
 			re_ind = menu_list.index(str(re.pk))
 			logging.info('ind '+str(re_ind)+" replacing "+str(exchange))
 			menu_list[re_ind] = exchange
@@ -200,10 +199,10 @@ def exchange_recipe(uid, recipe):
 			curr_plan.menu_plan = menu_list
 			curr_plan.save()
 			acc.current_plan = curr_plan
-		except Exception as e:
-			logging.info(e)
-	logging.info(str(recipe)+" "+str(exchange))
-	return get_recipe_by_id(rid=exchange)
+		logging.info(str(recipe)+" "+str(exchange))
+		return get_recipe_by_id(rid=exchange)
+	except Exception as e:
+		logging.info(e)
 
 def create_plan(uid, acc_obj=None):
 	try:
