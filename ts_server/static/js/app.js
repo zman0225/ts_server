@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-22 00:09:41
+* @Last Modified time: 2014-03-22 18:23:27
 */
 $(document).ready(function() {
 
@@ -130,7 +130,7 @@ $('#glyphchange').click(function(event){
 var username = "";
 var emailRegex = /^(([^<>()[\]\\.,;:!\s@\"]+(\.[^<>()[\]\\.,;:!\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 var usernameRegex = /^[A-Za-z0-9_-]{5,10}$/; 
-var passwordRegex = /^[A-Za-z0-9!@#$%^&*()_]{6,15}$/;
+var passwordRegex = /^[A-Za-z0-9!?@#$%^&*()_]{6,15}$/;
 var ageRegex = /^(1[3-9]|[2-9][0-9])$/;
 
 var username_valid = false;
