@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-21 23:23:50
+# @Last Modified time: 2014-03-22 00:05:18
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -157,52 +157,56 @@ def get_random_recipe():
 	re = recipes[random.randint(0,len(recipes)-1)]
 	return get_recipe_by_id(re)
 
-def exchange_recipe(uid, recipe):
-	try:
-		acc = None
-		if uid is not None:
-			mp.track(uid, 'does not like '+str(recipe)+' exchanging')
-			acc = Account._by_id(uid)
-		re = Recipe._by_name(recipe)
-		recipes = get_recipe_by_category(re.category)
+def exchange_with_out_uid(recipe):
+	re = Recipe._by_name(recipe)
+	recipes = get_recipe_by_category(re.category)
+	ind = random.randint(0,len(recipes)-1)
+	exchange = recipes[ind]
+	while exchange == str(re.pk):
+		if len(recipes)<2:
+			exchange = re.pk
+			break
 		ind = random.randint(0,len(recipes)-1)
-
-		menu_list = None
-		if uid is not None:
-			curr_plan = acc.current_plan
-			menu_list = curr_plan.menu_plan
-
 		exchange = recipes[ind]
-		# logging.info(str(recipe)+" "+str(exchange))
+	return get_recipe_by_id(rid=exchange)
 
-		if uid is not None:
-			while exchange in menu_list or exchange == str(re.pk):
-				if len(recipes)<=len(menu_list):
-					exchange = re.pk
-					break
-				ind = random.randint(0,len(recipes)-1)
-				exchange = recipes[ind]
-		else:
-			while exchange == str(re.pk):
-				if len(recipes)<2:
-					exchange = re.pk
-					break
-				ind = random.randint(0,len(recipes)-1)
-				exchange = recipes[ind]
-		# logging.info(str(recipe)+" "+str(exchange))
+def exchange_recipe(uid, recipe):
+	logging.info("exchanging "+recipe.encode('utf-8'))
+	if uid is None:
+		logging.info("no UID for exchange")
+		return exchange_with_out_uid(recipe)
+	logging.info("UID for exchange")
 
-		if uid is not None:
-			re_ind = menu_list.index(str(re.pk))
-			logging.info('ind '+str(re_ind)+" replacing "+str(exchange))
-			menu_list[re_ind] = exchange
-			logging.info("new "+str(exchange)+" old "+str(re.pk))
-			curr_plan.menu_plan = menu_list
-			curr_plan.save()
-			acc.current_plan = curr_plan
-		logging.info(str(recipe)+" "+str(exchange))
-		return get_recipe_by_id(rid=exchange)
-	except Exception as e:
-		logging.info(e)
+	mp.track(uid, 'does not like '+str(recipe)+' exchanging')
+	acc = Account._by_id(uid)
+	re = Recipe._by_name(recipe)
+	recipes = get_recipe_by_category(re.category)
+	ind = random.randint(0,len(recipes)-1)
+
+	curr_plan = acc.current_plan
+	menu_list = curr_plan.menu_plan
+
+	exchange = recipes[ind]
+	# logging.info(str(recipe)+" "+str(exchange))
+
+	while exchange in menu_list or exchange == str(re.pk):
+		logging.info("while loop")
+		if len(recipes)<=len(menu_list):
+			exchange = re.pk
+			break
+		ind = random.randint(0,len(recipes)-1)
+		exchange = recipes[ind]
+
+	re_ind = menu_list.index(str(re.pk))
+	logging.info("new "+str(exchange)+" old "+str(re.pk))
+	curr_plan.menu_plan[re_ind] = exchange
+	curr_plan.save()
+	acc.current_plan = curr_plan
+
+	# acc = Account._by_id(uid)
+	# sup = acc.current_plan
+	# logging.info(str(sup.menu_plan))
+	return get_recipe_by_id(rid=exchange)
 
 def create_plan(uid, acc_obj=None):
 	try:

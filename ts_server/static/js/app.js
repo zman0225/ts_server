@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-21 19:28:04
+* @Last Modified time: 2014-03-22 00:09:41
 */
 $(document).ready(function() {
 
@@ -630,7 +630,7 @@ $('#logout').on("click",
  		$('#myTab a[href="#home"]').tab('show');
  		$('#front_create').off('click');
  		$('#front_create').attr('onclick',"interested();");
-
+ 		location.reload();
     }
 );
 
