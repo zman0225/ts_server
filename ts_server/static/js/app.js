@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-25 13:41:32
+* @Last Modified time: 2014-03-25 13:44:33
 */
 $(document).ready(function() {
 
@@ -555,7 +555,7 @@ validation_callback = function(response){
 	// console.log(response);
 	if (response["return"]==true){
     	validate(response);
-    	$('#planner').tab('show');
+
 	}else{
 		$('#home').tab('show');
 		unvalidate();
@@ -588,6 +588,7 @@ validate = function(response){
 	$('#plannertab').removeClass('hidden');
 	$('#front_create').prop('onclick',null);
 	$('#front_create').on('click',function(){$('#preferencestab').trigger('click');});
+	$('#preferencestab').trigger('click');
 	load_preference();
 }
 
