@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-25 13:45:56
+* @Last Modified time: 2014-03-25 13:48:02
 */
 $(document).ready(function() {
 
@@ -588,7 +588,7 @@ validate = function(response){
 	$('#plannertab').removeClass('hidden');
 	$('#front_create').prop('onclick',null);
 	$('#front_create').on('click',function(){$('#preferencestab').trigger('click');});
-	// $('#preferencestab').trigger('click');
+	$('#front_create').text("create my menu!");
 	load_preference();
 }
 
