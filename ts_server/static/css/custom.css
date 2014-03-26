@@ -25,8 +25,9 @@ height:928px;
 #demo_recipe{
 	display: table-row;
 	border:2px solid;
-border-radius:25px;
+	border-radius:25px;
 }
+
 #demo_recipe li {
 	display: table-cell;
 	height: 100%;
@@ -53,7 +54,7 @@ border-radius:25px;
 	background-color: #369;
 }
 
-.relative:hover > #glyphchange
+.relative:hover #glyphchange
 {
 	display: block;
 	background-color: #369;
@@ -62,8 +63,8 @@ border-radius:25px;
 #glyphchange{
 	display: none;
 	position: absolute;
-    top: 0.75em;
-    right: 1.75em;
+    top: 5%;
+    right: 25%;
     background-color: gray;
 	border-radius:5px;
 	font-size: 15pt;

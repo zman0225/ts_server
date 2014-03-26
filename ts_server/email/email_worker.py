@@ -7,7 +7,10 @@ from cPickle import loads, dumps
 import time
 import os
 import requests
+import datetime
+d = datetime.datetime.now()
 
+from ts_server.models.account import *
 
 class EmailWorker(threading.Thread):
 	def __init__(self, threadID, event):
@@ -21,10 +24,12 @@ class EmailWorker(threading.Thread):
 	def run(self):
 		logging.info("EmailWorker [ID]:%s"%str(self.threadID))
 		while not self.stopped.wait(3600):
-			kw = self.r.hgetall("email")
-			self.r.delete("email")
-			logging.info("Sending emails to %d recipients"%len(kw))
-			# self.send(kw)
+			if d.isoweekday()==5 and not self.r.exists('weekly_sent'):
+				kw = self.r.hgetall("email")
+				self.r.delete("email")
+				logging.info("Sending emails to %d recipients"%len(kw))
+				# self.send(kw)
+				self.r.set('weekly_sent',"true",ex=87000)
 
 	def send(self, kw):
 		for u in kw.keys():
@@ -47,6 +52,6 @@ class EmailWorker(threading.Thread):
 			auth=("api", "key-9y7c3fgcidcnqzopu-psjg0nq3wbg7h3"),
 			data={"from": "Chef Sal <chefsal@mg.timesavorapp.com>",
 				"to": [email],
-				"subject": "Hello, %s - your updated meals this week"%name,
+				"subject": "Hello, %s - your meals this week"%name,
 				"text": msg})
 
