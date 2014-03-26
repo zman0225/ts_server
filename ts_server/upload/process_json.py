@@ -5,6 +5,7 @@ import os.path
 
 from ts_server.adapter.usercontrol import new_recipe
 from ts_server.adapter.administration import connect_to_db
+from ts_server.models.recipe import *
 def process_recipe(recipe):
 	name = recipe['name']
 	category = recipe['category']
@@ -34,6 +35,11 @@ def process_recipe(recipe):
 		print 'ALREADY IN DATABASE!'
 	image.close()
 
+def redo_instructions(recipe):
+	r = Recipe._by_name(recipe['name'])
+	instruction_list = list(recipe['instruction'])
+	r.update(set__instructions=instruction_list)
+	print "recipe updated: %s"%r.name
 
 def read_json(fs):
 	json_data=open(fs,'r')
@@ -42,7 +48,8 @@ def read_json(fs):
 	json_data.close()
 	i = 0
 	for recipe in data:
-		process_recipe(recipe)
+		redo_instructions(recipe)
+		# process_recipe(recipe)
 
 if __name__ == '__main__':
 	connect_to_db("ts-server",'23.253.209.158',27017,'ts_server','a2e7rqej')

@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-25 13:48:02
+* @Last Modified time: 2014-03-26 10:14:14
 */
 $(document).ready(function() {
 
@@ -383,7 +383,7 @@ add_recipes_to_plan = function(data){
 process_recipe = function(value){
 	value["picture"]= get_image_name(value['name']);
 	value["time_required"]["total_time"]=parseInt(value['time_required']['prep time'])+parseInt(value['time_required']['cooking time']);
-	value['instructions'].reverse();
+	// value['instructions'].reverse();
 }
 preference_set_callback = function(response){
 	if (response["return"]==true){
