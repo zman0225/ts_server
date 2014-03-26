@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-24 22:34:55
+# @Last Modified time: 2014-03-26 16:58:11
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -282,7 +282,7 @@ def generate_grocery_list(uid):
 		for kw in kw_list:
 			kw_list[kw] = list(kw_list[kw])
 		# logging.info(kw_list)
-
+		mp.track(uid, 'generated grocery list')
 		return kw_list
 	except Exception as e:
 		logging.info(e)
