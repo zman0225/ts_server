@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:20:14
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-26 16:58:11
+# @Last Modified time: 2014-03-27 18:27:06
 
 from ts_server.models.account import *
 from ts_server.models.recipe import *
@@ -54,7 +54,7 @@ def new_ts_account(username, password, ip_addr, gender, age, email):
 		    '$ip'		:ip_addr	
 		})
 		mp.track(str(acc.pk), 'register')
-		mp.track(str(ip_addr), 'register')
+		# mp.track(str(ip_addr), 'register')
 		# mp.alias(str(acc.pk), ip_addr)
 		logging.info("account %s created!"%(str(acc.pk)))
 		return acc
@@ -269,7 +269,6 @@ def generate_grocery_list(uid):
 				except:
 					logging.info(ing+"does not exist")
 					continue
-
 				cat = ing_obj.category
 				if cat not in kw_list:
 					a = set()
