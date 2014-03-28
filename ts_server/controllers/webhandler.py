@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-23 15:23:56
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-10 10:17:19
+# @Last Modified time: 2014-03-27 21:52:39
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -20,6 +20,9 @@ class WebHandler(BaseHandler):
 	def get(self):
 		name = self.get_argument("recipe_name", default=None, strip=False)
 		mp.track(str(self.request.remote_ip), 'visited')
+		ref = self.request.headers.get('Referer')
+		if ref is not None:
+			mp.track(str(self.request.remote_ip),str(ref))
 		if name:
 			print name
 		else:
