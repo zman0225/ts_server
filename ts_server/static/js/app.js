@@ -2,7 +2,7 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-04-14 13:03:38
+* @Last Modified time: 2014-04-14 13:10:42
 */
 $(document).ready(function() {
 
@@ -765,14 +765,12 @@ $('#email_grocery').on('click',function(){
 grocery_callback = function(response){
 	if (response["return"]==true){
 		grocery_list = {};
-    	var re = response['packet']['grocery'];
-    	console.log(re);
     	var template = _.template(
             $( "#grocery_acc" ).html()
         );
     	$('#grocery_list').html(template( response['packet'] ));
     	grocery_list = response['packet']['grocery'];
-    	
+    	console.log(grocery_list);
 	}else{
 
 	}

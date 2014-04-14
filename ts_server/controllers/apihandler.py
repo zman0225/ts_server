@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-02-20 12:25:25
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-26 17:32:06
+# @Last Modified time: 2014-04-14 13:17:53
 
 from basehandler import BaseHandler
 import tornado.ioloop
@@ -117,6 +117,7 @@ class ApiHandler(BaseHandler):
 	def get_recipes(self,rid):
 		recipes = []
 		for r in rid:
+			logging.info(str(r))
 			recipes.append(get_recipe_by_id(r))
 		self.write(self.json_packet(retval=True, return_code = 0, packet = {'recipes':recipes}))
 		# self.finish()
