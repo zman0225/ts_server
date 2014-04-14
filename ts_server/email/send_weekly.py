@@ -3,7 +3,7 @@
 # @Author: ziyuanliu
 # @Date:   2014-03-27 18:23:27
 # @Last Modified by:   ziyuanliu
-# @Last Modified time: 2014-03-28 08:07:11
+# @Last Modified time: 2014-04-04 00:26:25
 # a script
 
 from ts_server.models.account import *
@@ -39,20 +39,50 @@ def send_simple_message(email, msg, subject = None, tag = None):
 			"to": [email],
 			"subject": subject,
 			"html": msg,
-			"o:tag":tag,
-			"o:campaign":"c7umr",
+			"o:campaign":tag,
+			"o:deliverytime": "Fri, 4 Apr 2014 08:00:00 -0500",
+			"o:tracking": True})
+
+
+ 
+
+def send_request(email, msg, subject = None, tag = None):
+	return requests.post(
+		"https://api.mailgun.net/v2/mg.timesavorapp.com/messages",
+		auth=("api", "key-9y7c3fgcidcnqzopu-psjg0nq3wbg7h3"),
+		data={"from": "Salman from TimeSavor <chefsal@mg.timesavorapp.com>",
+			"to": [email],
+			"subject": subject,
+			"text": msg,
+			"o:campaign":tag,
 			"o:tracking": True})
 
 if __name__ == '__main__':
 	connect_to_db("ts-server",'23.253.209.158',27017,'ts_server','a2e7rqej')
 	subscribed = 0
-
+	print "connected"
 	for acc in Account.objects:
 		if acc.subscribed:
 
 			email = acc.email
 			username = acc.username
 			rand = random.randint(0,2)
+			tests = ['c8lv7','c8lv8','c8lv9']
+
+# 			subjects = ['Would you help a student entrepreneur?','Our site didn\'t make planning effortless? Help us do better','Still wish you were better prepared?']
+# 			msg = """Hi!  I'm Salman,\n graduating senior at Dartmouth College and founder of Time Savor.\n
+
+# Our website is our first stab at making dinner planning effortless.  We know there's a lot to improve.  \n
+
+# Would you mind briefly chatting with me so we can make something that will actually make your life easier?  \n
+
+# Feel free to leave your phone number if you want me to call you whenever, or we can try to schedule a time.  \n
+
+# Salman\n
+
+# P.S. Honestly, the whole reason I'm doing this is to help people eat better.  My top priority is to  build something that can help the world."""
+# 			send_request(email,msg,subjects[rand],tests[rand])
+# 			print "sent to %s"%username
 			subjects = ["%s: Here's what you're cooking next week!"%username,"%s: Cooking next week will be SO easy"%username,"%s: Guess what? You're ready for dinner next week!"%username]
 			campaign = ["first","second","third"]
 
@@ -62,9 +92,8 @@ if __name__ == '__main__':
 			try:
 				if plan is not None:
 					recipe_list = [get_recipe_name_by_id(re) for re in plan]
-					temp = template(recipe_list,acc.username)
-					
-					send_simple_message(email,temp,subjects[rand],campaign[rand])
+					temp = template(recipe_list,username)
+					send_simple_message(email,temp,subjects[rand],tests[rand])
 					print "sent to %s"%username
 			except Exception as e:
 				print e

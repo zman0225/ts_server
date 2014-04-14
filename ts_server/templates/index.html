@@ -413,11 +413,14 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
         <button id="grocery_close" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3 class="modal-title" id="registerLabel"><a class="logo">Your Grocery List</a></h3>
         <h4 class="btn btn-primary btn-sm" id="email_grocery">email me the grocery list!</h4>
+        <h4 class="btn btn-primary btn-sm" id="print_grocery" >print the grocery list</h4>
       </div>
      
+     <div id = "printableArea">
 	<ul id="grocery_list">
 		
 	</ul>      
+	</div>
     </div>
   </div>
 </div>
@@ -555,6 +558,7 @@ olark.identify('1601-149-10-9994');/*]]>*/</script><noscript><a href="https://ww
 	</script>
 
     <!-- other scripts -->
+    <script src="{{ static_url("js/printThis.js")}}"></script>
     <script src="{{ static_url("js/app.js")}}"></script>
     <script src="{{ static_url("js/custom.js")}}"></script>
 	<script src="{{ static_url("js/scrolltopcontrol.js")}}"></script>

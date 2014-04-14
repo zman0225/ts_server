@@ -2,13 +2,13 @@
 * @Author: ziyuanliu
 * @Date:   2014-02-23 23:19:59
 * @Last Modified by:   ziyuanliu
-* @Last Modified time: 2014-03-26 10:14:14
+* @Last Modified time: 2014-04-14 13:03:38
 */
 $(document).ready(function() {
 
 //backbone app initialization 
 var app = {}; // create namespace for our app
-
+var grocery_list = {};
 // the user model - will expand further in the future to accomodate a user page
 app.User = Backbone.Model.extend({
   defaults: {
@@ -764,19 +764,46 @@ $('#email_grocery').on('click',function(){
 
 grocery_callback = function(response){
 	if (response["return"]==true){
+		grocery_list = {};
     	var re = response['packet']['grocery'];
     	console.log(re);
     	var template = _.template(
             $( "#grocery_acc" ).html()
         );
-    	$('#grocery_list').html(template( response['packet'] ))
-  //   	console.log(re);
-  //   	$.each(re, function(k,v) {
-		// 	console.log(k);
-		// 	console.log(v);
-		// });
+    	$('#grocery_list').html(template( response['packet'] ));
+    	grocery_list = response['packet']['grocery'];
+    	
 	}else{
 
+	}
+
+$('#print_grocery').on('click',function(){
+	print_grocery();
+});
+
+	print_grocery = function(){
+		//create a html to print
+		var html_print = $('<div>');
+		$.each(grocery_list, function(k,v) {
+			
+			html_print.append($('<h3>').append(k));
+			var list = $('<ul>');
+			$.each(v, function(k,v) {
+				list.append($('<li>').append(v));
+			});
+			list.appendTo(html_print);
+			// console.log(k);
+			// console.log(v);
+		});
+		console.log(html_print);
+		html_print.printThis();
+		 // var originalContents = document.body.innerHTML;
+
+		 // document.body.innerHTML = printContents;
+
+		 // window.print();
+
+		 // document.body.innerHTML = originalContents;
 	}
 }
 // initial app calls
@@ -794,4 +821,15 @@ Backbone.history.start();
 var view = new app.RecipeListView();
 
 });
+
+function printDiv(divName) {
+ var printContents = document.getElementById(divName).innerHTML;
+ var originalContents = document.body.innerHTML;
+
+ document.body.innerHTML = printContents;
+
+ window.print();
+
+ document.body.innerHTML = originalContents;
+}
 
